@@ -21,8 +21,8 @@ module Blogger
     |      <p>#{body}</p>
     |    </div>
     |  </content>
-    |  <category scheme="http://www.blogger.com/atom/ns#" term="marriage" />
-    |  <category scheme="http://www.blogger.com/atom/ns#" term="Mr. Darcy" />
+    #|  <category scheme="http://www.blogger.com/atom/ns#" term="marriage" />
+    #|  <category scheme="http://www.blogger.com/atom/ns#" term="Mr. Darcy" />
     |</entry>
     EOF
   end

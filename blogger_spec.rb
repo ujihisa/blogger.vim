@@ -2,9 +2,9 @@ require 'blogger.rb'
 
 describe 'Net::HTTP.post' do
   it 'wraps posting using .new, #post and #body' do
-    Net::HTTP.should_receive(:new).with(URI.parse('http://aaa.bbb/ccc/ddd'))
     nh = mock('nh')
-    def nh.post(a, b, c); nh end
+    Net::HTTP.should_receive(:new).with('aaa.bbb').and_return(nh)
+    def nh.post(a, b, c); self end
     def nh.body; 'ok' end
     Net::HTTP.post(
       'http://aaa.bbb/ccc/ddd',

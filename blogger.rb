@@ -12,9 +12,12 @@ class Net::HTTP
 end
 
 module Blogger
-  # post :: String -> IO String
-  def self.post(str)
-    'ok'
+  # post :: String -> String -> IO String
+  def self.post(str, blogid)
+    Net::HTTP.post(
+      "http://www.blogger.com/feeds/#{blogid}/posts/default",
+      text2xml(str),
+      {'Content-Type' => 'application/atom+xml'})
   end
 
   # text2xml :: String -> String

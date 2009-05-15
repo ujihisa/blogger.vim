@@ -2,7 +2,7 @@
 
 The only one vim script which handles [Blogger](http://www.blogger.com/) using metarw. We also offer the ruby script blogger.rb which handles Blogger.
 
-Blogger is a blog service that offers \*.blogspot.com. So feel free to call this script blogspot.vim.
+Blogger is a blog service that offers \*.blogspot.com. Therefore you would feel free to call this script blogspot.vim.
 
 ## Author
 
@@ -22,7 +22,7 @@ Tatsuhiro UJIHISA [http://ujihisa.blogspot.com/](http://ujihisa.blogspot.com/)
 
 Before you use blogger.vim, you have to change the setting of blogger.
 
-!(Convert line breaks)[http://gyazo.com/7c8b02a1a3e41fb665347323bf4fab84.png]
+![Convert line breaks](http://gyazo.com/7c8b02a1a3e41fb665347323bf4fab84.png)
 
 ## For Developpers
 

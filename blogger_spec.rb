@@ -27,7 +27,7 @@ end
 
 describe Blogger do
   before(:each) do
-    @new_entry_str = "hi\n\nIt's sunny today.\nyay!"
+    @new_entry_str = "hi\n\nIt's sunny today.\nyay!\n\n* item1\n* item2"
     @email = 'blogger.vim@gmail.com'
     @pass = 'bloggervimvim' # I hope you never change it...
     @blogid = '2754163879208528226'

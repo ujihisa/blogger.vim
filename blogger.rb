@@ -57,13 +57,13 @@ module Blogger
   def self.text2xml(text)
     lines = text.lines.to_a
     title = lines.shift.strip
-    body = lines.join("<br />")
+    body = Markdown.new(lines.join).to_html
     <<-EOF.gsub(/^\s*\|/, '')
     |<entry xmlns='http://www.w3.org/2005/Atom'>
     |  <title type='text'>#{title}</title>
     |  <content type='xhtml'>
     |    <div xmlns="http://www.w3.org/1999/xhtml">
-    |      <p>#{body}</p>
+    |      #{body}
     |    </div>
     |  </content>
     #|  <category scheme="http://www.blogger.com/atom/ns#" term="marriage" />

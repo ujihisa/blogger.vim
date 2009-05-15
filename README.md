@@ -2,6 +2,8 @@
 
 The only one vim script which handles [Blogger](http://www.blogger.com/) using metarw.
 
+Blogger is a blog service that offers \*.blogspot.com.
+
 ## Author
 
 Tatsuhiro UJIHISA [http://ujihisa.blogspot.com/](http://ujihisa.blogspot.com/)

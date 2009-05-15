@@ -1,6 +1,15 @@
 #!/usr/bin/env ruby
+require 'net/http'
+require 'uri'
 require 'rubygems'
 require 'nokogiri'
+
+class Net::HTTP
+  def self.post(uri, data, header)
+    uri = URI.parse(uri)
+    new(uri.host).post(uri.path, data, header).body
+  end
+end
 
 module Blogger
   # post :: String -> IO String

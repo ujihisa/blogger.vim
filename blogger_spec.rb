@@ -1,5 +1,18 @@
 require 'blogger.rb'
 
+describe 'Net::HTTP.post' do
+  it 'wraps posting using .new, #post and #body' do
+    Net::HTTP.should_receive(:new).with(URI.parse('http://aaa.bbb/ccc/ddd'))
+    nh = mock('nh')
+    def nh.post(a, b, c); nh end
+    def nh.body; 'ok' end
+    Net::HTTP.post(
+      'http://aaa.bbb/ccc/ddd',
+      'data',
+      {'a' => 'b'}).should == 'ok'
+  end
+end
+
 describe Blogger do
   before(:each) do
     @new_entry_str = "hi\n\nIt's sunny today.\nyay!"

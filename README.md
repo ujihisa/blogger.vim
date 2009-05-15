@@ -9,8 +9,9 @@ Tatsuhiro UJIHISA [http://ujihisa.blogspot.com/](http://ujihisa.blogspot.com/)
 ## Requirements
 
 * vim 7.2+
+  * [metarw 0.0.3+](http://www.vim.org/scripts/script.php?script_id=2335)
 * ruby 1.9.2+
-* [metarw 0.0.3+](http://www.vim.org/scripts/script.php?script_id=2335)
+  * nokogiri 1.2.3+
 
 ## For me
 

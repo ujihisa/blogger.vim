@@ -1,4 +1,7 @@
 #!/usr/bin/env ruby
+require 'rubygems'
+require 'nokogiri'
+
 module Blogger
   # post :: String -> IO String
   def self.post(str)

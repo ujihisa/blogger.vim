@@ -1,8 +1,8 @@
 # Blogger.vim
 
-The only one vim script which handles [Blogger](http://www.blogger.com/) using metarw.
+The only one vim script which handles [Blogger](http://www.blogger.com/) using metarw. We also offer the ruby script blogger.rb which handles Blogger.
 
-Blogger is a blog service that offers \*.blogspot.com.
+Blogger is a blog service that offers \*.blogspot.com. So feel free to call this script blogspot.vim.
 
 ## Author
 
@@ -28,3 +28,7 @@ Implement them:
 * Write document
 * Write unit test
 * Release Version 1.0 to vim.org
+
+## Developper requirements
+
+* rspec 1.2.6+

@@ -44,7 +44,7 @@ describe Blogger do
     it 'gets token' do
       a = Blogger.login(@email, @pass)
       a.should be_instance_of(String)
-      a.size.should == 161
+      a.size.should == 160
     end
   end
 

@@ -26,7 +26,7 @@ end
 module Blogger
   # post :: String -> String -> String -> String -> IO String
   def self.post(email, pass, str, blogid)
-    a = login(email, pass).chomp
+    a = login(email, pass)
     xml = Net::HTTP.post(
       "http://www.blogger.com/feeds/#{blogid}/posts/default",
       text2xml(str),
@@ -49,7 +49,7 @@ module Blogger
         'source' => 'ujihisa-bloggervim-1'
       }.map {|i, j| "#{i}=#{j}" }.join('&'),
       {'Content-Type' => 'application/x-www-form-urlencoded'})
-    a.body.lines.to_a.maph {|i| i.split('=') }['Auth']
+    a.body.lines.to_a.maph {|i| i.split('=') }['Auth'].chomp
   end
 
   # text2xml :: String -> String

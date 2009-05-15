@@ -66,8 +66,6 @@ module Blogger
     |      #{body}
     |    </div>
     |  </content>
-    #|  <category scheme="http://www.blogger.com/atom/ns#" term="marriage" />
-    #|  <category scheme="http://www.blogger.com/atom/ns#" term="Mr. Darcy" />
     |</entry>
     EOF
   end

@@ -1,0 +1,4 @@
+#!/usr/bin/env python
+import html2text
+import sys
+print(html2text.html2text(''.join(sys.stdin)))

@@ -15,7 +15,8 @@ describe Blogger do
   describe '.text2xml' do
     it 'translate the argument text to xml' do
       xml = Blogger.text2xml(@new_entry_str)
-      xml.should match(/\A<entry.*?<\/entry>\n\z/m)
+      doc = Nokogiri::HTML(xml)
+      doc.xpath('//title').first.content.should == 'hi'
     end
   end
 end

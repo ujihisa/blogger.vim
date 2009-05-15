@@ -3,6 +3,7 @@ require 'net/https'
 require 'uri'
 require 'rubygems'
 require 'nokogiri'
+require 'markdown'
 
 class Net::HTTP
   def self.post(uri, data, header)

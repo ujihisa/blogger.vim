@@ -1,11 +1,21 @@
 require 'blogger.rb'
 
 describe Blogger do
+  before(:each) do
+    @new_entry_str = "hi\n\nIt's sunny today.\nyay!"
+  end
+
   describe '.post' do
     it 'creates a new entry by the argument string' do
-      @new_entry_str = "hi\n\nIt's sunny today.\nyay!"
       uri = Blogger.post(@new_entry_str)
       uri.should match(/^http/)
+    end
+  end
+
+  describe '.text2xml' do
+    it 'translate the argument text to xml' do
+      xml = Blogger.text2xml(@new_entry_str)
+      xml.should match(/\A<entry.*?<\/entry>\n\z/m)
     end
   end
 end

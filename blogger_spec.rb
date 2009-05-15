@@ -33,12 +33,12 @@ describe Blogger do
     @blogid = '2754163879208528226'
   end
 
-  #describe '.post' do
-  #  it 'creates a new entry by the argument string' do
-  #    uri = Blogger.post(@new_entry_str, @blogid)
-  #    uri.should match(/^http/)
-  #  end
-  #end
+  describe '.post' do
+    it 'creates a new entry by the argument string' do
+      uri = Blogger.post(@email, @pass, @new_entry_str, @blogid)
+      uri.should match(/^http/)
+    end
+  end
 
   describe '.login' do
     it 'gets token' do

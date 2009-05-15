@@ -8,8 +8,10 @@ class Net::HTTP
   def self.post(uri, data, header)
     uri = URI.parse(uri)
     i = new(uri.host, uri.port)
-    i.use_ssl = true
-    i.verify_mode = OpenSSL::SSL::VERIFY_NONE
+    unless uri.port == 80
+      i.use_ssl = true
+      i.verify_mode = OpenSSL::SSL::VERIFY_NONE
+    end
     i.post(uri.path, data, header)
   end
 end
@@ -22,12 +24,17 @@ class Array
 end
 
 module Blogger
-  # post :: String -> String -> IO String
-  def self.post(str, blogid)
-    Net::HTTP.post(
+  # post :: String -> String -> String -> String -> IO String
+  def self.post(email, pass, str, blogid)
+    a = login(email, pass).chomp
+    xml = Net::HTTP.post(
       "http://www.blogger.com/feeds/#{blogid}/posts/default",
       text2xml(str),
-      {'Content-Type' => 'application/atom+xml'})
+      {
+        "Authorization" => "GoogleLogin auth=#{a}",
+        'Content-Type' => 'application/atom+xml'
+      }).body
+    Nokogiri::HTML(xml).xpath('//link[attribute::rel="alternate"]').first['href']
   end
 
   # login :: String -> String -> String
@@ -37,7 +44,7 @@ module Blogger
       {
         'Email' => email,
         'Passwd' => pass,
-        'service' => 'xapi',
+        'service' => 'blogger',
         'accountType' => 'HOSTED_OR_GOOGLE',
         'source' => 'ujihisa-bloggervim-1'
       }.map {|i, j| "#{i}=#{j}" }.join('&'),

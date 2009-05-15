@@ -30,7 +30,7 @@ describe Blogger do
     @new_entry_str = "hi\n\nIt's sunny today.\nyay!\n\n* item1\n* item2"
     @email = 'blogger.vim@gmail.com'
     @pass = 'bloggervimvim' # I hope you never change it...
-    @blogid = '2754163879208528226'
+    @blogid = '6812673424190774170'
   end
 
   describe '.post' do

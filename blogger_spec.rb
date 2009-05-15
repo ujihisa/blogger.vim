@@ -16,6 +16,8 @@ end
 describe Blogger do
   before(:each) do
     @new_entry_str = "hi\n\nIt's sunny today.\nyay!"
+    @pass = 'bloggervimvim' # I hope you never change it...
+    @blogid = '2754163879208528226'
   end
 
   describe '.post' do

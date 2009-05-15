@@ -3,9 +3,10 @@ require 'blogger.rb'
 describe 'Net::HTTP.post' do
   it 'wraps posting using .new, #post and #body' do
     nh = mock('nh')
-    Net::HTTP.should_receive(:new).with('aaa.bbb').and_return(nh)
-    def nh.post(a, b, c); self end
-    def nh.body; 'ok' end
+    Net::HTTP.should_receive(:new).with('aaa.bbb', 80).and_return(nh)
+    def nh.use_ssl=(a); end
+    def nh.verify_mode=(a); end
+    def nh.post(a, b, c); 'ok' end
     Net::HTTP.post(
       'http://aaa.bbb/ccc/ddd',
       'data',
@@ -13,17 +14,38 @@ describe 'Net::HTTP.post' do
   end
 end
 
+describe 'Array#maph' do
+  it 'wraps Enumerable#map to get Hash directly' do
+    hash = [1, 2, 3].maph {|i| [i.to_s, i*2] }
+    hash.should == {
+      '1' => 2,
+      '2' => 4,
+      '3' => 6
+    }
+  end
+end
+
 describe Blogger do
   before(:each) do
     @new_entry_str = "hi\n\nIt's sunny today.\nyay!"
+    @email = 'blogger.vim@gmail.com'
     @pass = 'bloggervimvim' # I hope you never change it...
     @blogid = '2754163879208528226'
   end
 
-  describe '.post' do
-    it 'creates a new entry by the argument string' do
-      uri = Blogger.post(@new_entry_str, @blogid)
-      uri.should match(/^http/)
+  #describe '.post' do
+  #  it 'creates a new entry by the argument string' do
+  #    uri = Blogger.post(@new_entry_str, @blogid)
+  #    uri.should match(/^http/)
+  #  end
+  #end
+
+  describe '.login' do
+    it 'gets token' do
+      a = Blogger.login(@email, @pass)
+      a.should have_key('SID')
+      a.should have_key('LSID')
+      a.should have_key('Auth')
     end
   end
 

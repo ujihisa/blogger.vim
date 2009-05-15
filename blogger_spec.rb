@@ -40,6 +40,14 @@ describe Blogger do
     end
   end
 
+  describe '.list' do
+    it 'retrieves blog posts' do
+      uris = Blogger.list(@email, @pass, @blogid)
+      uris.should be_instance_of(Array)
+      uris.first.should match(/^http/)
+    end
+  end
+
   describe '.login' do
     it 'gets token' do
       a = Blogger.login(@email, @pass)

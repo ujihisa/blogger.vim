@@ -20,7 +20,6 @@ Tatsuhiro UJIHISA [http://ujihisa.blogspot.com/](http://ujihisa.blogspot.com/)
 
 Implement them:
 
-* Post with Markdown
 * Get the index
 * Get an entry
 * Update an entry

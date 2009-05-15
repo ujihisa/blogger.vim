@@ -38,6 +38,13 @@ module Blogger
     Nokogiri::HTML(xml).xpath('//link[attribute::rel="alternate"]').first['href']
   end
 
+  # list :: String -> String -> String -> IO [String]
+  def self.list(email, pass, blogid)
+    a = login(email, pass)
+    xml = Net::HTTP.get(URI.parse("http://www.blogger.com/feeds/#{blogid}/posts/default"))
+    Nokogiri::HTML(xml).xpath('//entry/link[attribute::rel="alternate"]').map {|i| i['href'] }
+  end
+
   # login :: String -> String -> String
   def self.login(email, pass)
     a = Net::HTTP.post(

@@ -44,6 +44,17 @@ module Blogger
     Nokogiri::HTML(xml).xpath('//entry/link[attribute::rel="alternate"]').map {|i| i['href'] }
   end
 
+  # get :: String -> IO [String]
+  def self.get(blogid)
+    xml = Net::HTTP.get(URI.parse("http://www.blogger.com/feeds/#{blogid}/posts/default"))
+    content = Nokogiri::HTML(xml).xpath('//entry/content').first.content
+    IO.popen("#{File.dirname(__FILE__)}/html2text", 'r+') {|io|
+      io.puts content
+      io.close_write
+      io.read
+    }
+  end
+
   # login :: String -> String -> String
   def self.login(email, pass)
     a = Net::HTTP.post(

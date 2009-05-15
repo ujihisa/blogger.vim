@@ -48,6 +48,14 @@ describe Blogger do
     end
   end
 
+  describe '.get' do
+    it 'retrieves the blog post of the argument' do
+      text = Blogger.get(@blogid)
+      text.should be_instance_of(String)
+      text.should match(/yay!/)
+    end
+  end
+
   describe '.login' do
     it 'gets token' do
       a = Blogger.login(@email, @pass)

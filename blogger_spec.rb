@@ -17,6 +17,7 @@ describe Blogger do
       xml = Blogger.text2xml(@new_entry_str)
       doc = Nokogiri::HTML(xml)
       doc.xpath('//title').first.content.should == 'hi'
+      doc.xpath('//div/p').first.content.should match(/It's sunny today/)
     end
   end
 end

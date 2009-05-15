@@ -43,9 +43,8 @@ describe Blogger do
   describe '.login' do
     it 'gets token' do
       a = Blogger.login(@email, @pass)
-      a.should have_key('SID')
-      a.should have_key('LSID')
-      a.should have_key('Auth')
+      a.should be_instance_of(String)
+      a.size.should == 161
     end
   end
 

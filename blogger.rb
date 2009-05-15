@@ -30,7 +30,7 @@ module Blogger
       {'Content-Type' => 'application/atom+xml'})
   end
 
-  # login :: String -> String -> IO Hash
+  # login :: String -> String -> String
   def self.login(email, pass)
     a = Net::HTTP.post(
       'https://www.google.com/accounts/ClientLogin',
@@ -42,7 +42,7 @@ module Blogger
         'source' => 'ujihisa-bloggervim-1'
       }.map {|i, j| "#{i}=#{j}" }.join('&'),
       {'Content-Type' => 'application/x-www-form-urlencoded'})
-    a.body.lines.to_a.maph {|i| i.split('=') }
+    a.body.lines.to_a.maph {|i| i.split('=') }['Auth']
   end
 
   # text2xml :: String -> String

@@ -4,11 +4,11 @@ The only one vim script which handles Blogger (http://www.blogger.com/) using me
 
 ## Author
 
-Tatsuhiro UJIHISA http://ujihisa.blogspot.com/
+Tatsuhiro UJIHISA [http://ujihisa.blogspot.com/](http://ujihisa.blogspot.com/)
 
 ## Requirements
 
-* metarw 0.0.3+ http://www.vim.org/scripts/script.php?script_id=2335
+* [metarw 0.0.3+](http://www.vim.org/scripts/script.php?script_id=2335)
 * ruby 1.9.2+
 
 ## For me

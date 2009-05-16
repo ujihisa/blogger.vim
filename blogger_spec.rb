@@ -40,12 +40,23 @@ describe Blogger do
     end
   end
 
+  describe '.update' do
+    it 'updates the entry of the given uri with the argument string' do
+      uri = Blogger.list(@blogid).first
+      uri = "http://kkkkkkkkkkkkkkkkk2ad.blogspot.com/2009/05/hi_3915.html"
+      Blogger.update(@email, @pass, "hi updated\n\nupdated\n#{rand}", @blogid, uri)
+      Blogger.get(@blogid).should match('updated')
+    end
+  end
+
   describe '.list' do
     it 'retrieves blog posts' do
       uris = Blogger.list(@blogid)
       uris.should be_instance_of(Array)
       uris.first.should match(/^http/)
     end
+
+    it 'is ordered by latest'
   end
 
   describe '.get' do

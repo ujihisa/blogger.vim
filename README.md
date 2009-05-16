@@ -38,7 +38,6 @@ Before you use blogger.vim, you have to change the setting of blogger.
 
 Implement them:
 
-* Update an entry
 * Use Metarw
 * Write document
 * Release Version 1.0 to vim.org

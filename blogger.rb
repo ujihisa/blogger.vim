@@ -7,13 +7,21 @@ require 'markdown'
 
 class Net::HTTP
   def self.post(uri, data, header)
+    __post_or_put__(:post, uri, data, header)
+  end
+
+  def self.put(uri, data, header)
+    __post_or_put__(:put, uri, data, header)
+  end
+
+  def self.__post_or_put__(method, uri, data, header)
     uri = URI.parse(uri)
     i = new(uri.host, uri.port)
     unless uri.port == 80
       i.use_ssl = true
       i.verify_mode = OpenSSL::SSL::VERIFY_NONE
     end
-    i.post(uri.path, data, header)
+    i.__send__(method, uri.path, data, header)
   end
 end
 
@@ -35,19 +43,47 @@ module Blogger
         "Authorization" => "GoogleLogin auth=#{a}",
         'Content-Type' => 'application/atom+xml'
       }).body
-    Nokogiri::HTML(xml).xpath('//link[attribute::rel="alternate"]').first['href']
+    Nokogiri::XML(xml).xpath('//xmlns:link[attribute::rel="alternate"]').first['href']
   end
+
+  # update :: String -> String -> String -> String -> String -> IO ()
+  def self.update(email, pass, str, blogid, uri)
+    a = login(email, pass)
+
+    lines = str.lines.to_a
+    title = lines.shift.strip
+    body = Markdown.new(lines.join).to_html
+
+    xml = Net::HTTP.get(URI.parse("http://www.blogger.com/feeds/#{blogid}/posts/default")) # not dry!
+    xml = Nokogiri::XML(xml)
+    put_uri = xml.at("//xmlns:entry[xmlns:link/@href='#{uri}']/xmlns:link[@rel='edit']")['href']
+    xml.at("//xmlns:entry[xmlns:link/@href='#{uri}']/xmlns:title").content = title
+    xml.at("//xmlns:entry[xmlns:link/@href='#{uri}']/xmlns:content").content = <<-EOF.gsub(/^\s*\|/, '')
+    |<div xmlns="http://www.w3.org/1999/xhtml">
+    |  #{body}
+    |</div>
+    EOF
+    xml.at('//xmlns:entry')['xmlns'] = 'http://www.w3.org/2005/Atom'
+    Net::HTTP.put(
+      put_uri,
+      xml.at('//xmlns:entry').to_s,
+      {
+        "Authorization" => "GoogleLogin auth=#{a}",
+        'Content-Type' => 'application/atom+xml'
+      }).body
+  end
+
 
   # list :: String -> IO [String]
   def self.list(blogid)
     xml = Net::HTTP.get(URI.parse("http://www.blogger.com/feeds/#{blogid}/posts/default"))
-    Nokogiri::HTML(xml).xpath('//entry/link[attribute::rel="alternate"]').map {|i| i['href'] }
+    Nokogiri::XML(xml).xpath('//xmlns:entry/xmlns:link[attribute::rel="alternate"]').map {|i| i['href'] }
   end
 
   # get :: String -> IO [String]
   def self.get(blogid)
     xml = Net::HTTP.get(URI.parse("http://www.blogger.com/feeds/#{blogid}/posts/default"))
-    content = Nokogiri::HTML(xml).xpath('//entry/content').first.content
+    content = Nokogiri::XML(xml).xpath('//xmlns:entry/xmlns:content').first.content
     IO.popen("#{File.dirname(__FILE__)}/html2text", 'r+') {|io|
       io.puts content
       io.close_write

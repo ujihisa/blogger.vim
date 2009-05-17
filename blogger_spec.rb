@@ -65,7 +65,12 @@ describe Blogger do
       entry[:content].should match(/yay!/)
     end
 
-    it 'is ordered by latest'
+    it 'is ordered by latest' do
+      entries = Blogger.list(@blogid).map {|e|
+        DateTime.parse(e[:updated])
+      }
+      entries.sort.reverse.should == entries
+    end
   end
 
   describe '.get' do

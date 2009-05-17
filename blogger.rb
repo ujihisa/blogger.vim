@@ -88,13 +88,9 @@ module Blogger
 
   # get :: String -> String -> IO [String]
   def self.get(blogid, uri)
-    xml = Nokogiri::XML(Net::HTTP.get(URI.parse("http://www.blogger.com/feeds/#{blogid}/posts/default")))
-    title = xml.at("//xmlns:entry[xmlns:link/@href='#{uri}']/xmlns:content").content
-    content = xml.at("//xmlns:entry[xmlns:link/@href='#{uri}']/xmlns:content").content
-    IO.popen("#{File.dirname(__FILE__)}/html2text", 'r+') {|io|
-      io.puts title
-      io.puts
-      io.puts content
+    entry = list(blogid).find {|e| e[:uri] == uri }
+    entry[:title] + "\n\n" + IO.popen("#{File.dirname(__FILE__)}/html2text", 'r+') {|io|
+      io.puts entry[:content]
       io.close_write
       io.read
     }

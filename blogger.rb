@@ -33,6 +33,8 @@ class Array
 end
 
 module Blogger
+  class RateLimitException < Exception; end
+
   # post :: String -> String -> String -> String -> IO String
   def self.post(email, pass, str, blogid)
     a = login(email, pass)
@@ -43,6 +45,7 @@ module Blogger
         "Authorization" => "GoogleLogin auth=#{a}",
         'Content-Type' => 'application/atom+xml'
       }).body
+    raise RateLimitException if xml == "Blog has exceeded rate limit or otherwise requires word verification for new posts"
     Nokogiri::XML(xml).at('//xmlns:link[@rel="alternate"]')['href']
   end
 

@@ -43,7 +43,7 @@ describe Blogger do
     @new_entry_str = "hi\n\nIt's sunny today.\nyay!\n\n* item1\n* item2"
     @email = 'blogger.vim@gmail.com'
     @pass = 'bloggervimvim' # I hope you never change it...
-    @blogid = '6812673424190774170'
+    @blogid = '2961087480852727381'
   end
 
   describe '.post' do
@@ -56,7 +56,7 @@ describe Blogger do
   describe '.update' do
     it 'updates the entry of the given uri with the argument string' do
       uri = Blogger.list(@blogid).first[:uri]
-      uri = "http://kkkkkkkkkkkkkkkkk2ad.blogspot.com/2009/05/hi_7729.html"
+      uri = 'http://kkkkkkkkkkkkw.blogspot.com/2009/05/hi_17.html'
       Blogger.update(@email, @pass, "*dummy*", @blogid, uri) # Dirty hack
       Blogger.update(@email, @pass, "hi updated\n\nupdated\n#{rand}\n\nyay!", @blogid, uri)
       Blogger.get(@blogid, uri).should match(/updated/)

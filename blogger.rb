@@ -43,7 +43,7 @@ module Blogger
         "Authorization" => "GoogleLogin auth=#{a}",
         'Content-Type' => 'application/atom+xml'
       }).body
-    Nokogiri::XML(xml).xpath('//xmlns:link[attribute::rel="alternate"]').first['href']
+    Nokogiri::XML(xml).at('//xmlns:link[@rel="alternate"]')['href']
   end
 
   # update :: String -> String -> String -> String -> String -> IO ()

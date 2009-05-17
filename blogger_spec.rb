@@ -46,23 +46,6 @@ describe Blogger do
     @blogid = '2961087480852727381'
   end
 
-  describe '.post' do
-    it 'creates a new entry by the argument string' do
-      uri = Blogger.post(@email, @pass, @new_entry_str, @blogid)
-      uri.should match(/^http/)
-    end
-  end
-
-  describe '.update' do
-    it 'updates the entry of the given uri with the argument string' do
-      uri = Blogger.list(@blogid).first[:uri]
-      uri = 'http://kkkkkkkkkkkkw.blogspot.com/2009/05/hi_17.html'
-      Blogger.update(@email, @pass, "*dummy*", @blogid, uri) # Dirty hack
-      Blogger.update(@email, @pass, "hi updated\n\nupdated\n#{rand}\n\nyay!", @blogid, uri)
-      Blogger.get(@blogid, uri).should match(/updated/)
-    end
-  end
-
   describe '.list' do
     it 'retrieves blog entry hashes' do
       entries = Blogger.list(@blogid)
@@ -100,6 +83,23 @@ describe Blogger do
       a = Blogger.login(@email, @pass)
       a.should be_instance_of(String)
       a.size.should == 160
+    end
+  end
+
+  describe '.post' do
+    it 'creates a new entry by the argument string' do
+      uri = Blogger.post(@email, @pass, @new_entry_str, @blogid)
+      uri.should match(/^http/)
+    end
+  end
+
+  describe '.update' do
+    it 'updates the entry of the given uri with the argument string' do
+      uri = Blogger.list(@blogid).first[:uri]
+      uri = 'http://kkkkkkkkkkkkw.blogspot.com/2009/05/hi_17.html'
+      Blogger.update(@email, @pass, "*dummy*", @blogid, uri) # Dirty hack
+      Blogger.update(@email, @pass, "hi updated\n\nupdated\n#{rand}\n\nyay!", @blogid, uri)
+      Blogger.get(@blogid, uri).should match(/updated/)
     end
   end
 

@@ -35,6 +35,44 @@ end
 module Blogger
   class RateLimitException < Exception; end
 
+  # list :: String -> IO [Hash]
+  def self.list(blogid)
+    xml = Net::HTTP.get(URI.parse("http://www.blogger.com/feeds/#{blogid}/posts/default"))
+    Nokogiri::XML(xml).xpath('//xmlns:entry[xmlns:link/@rel="alternate"]').
+      map {|i|
+        hash = {}
+        [:published, :updated, :title, :content].each {|s| hash[s] = i.at(s.to_s).content }
+        hash[:uri] = i.at('link[@rel="alternate"]')['href']
+        hash
+      }
+  end
+
+  # get :: String -> String -> IO [String]
+  def self.get(blogid, uri)
+    entry = list(blogid).find {|e| e[:uri] == uri }
+    entry[:title] + "\n\n" + IO.popen("#{File.dirname(__FILE__)}/html2text", 'r+') {|io|
+      io.puts entry[:content]
+      io.close_write
+      io.read
+    }
+  end
+
+  # login :: String -> String -> String
+  def self.login(email, pass)
+    return @@login if defined? @@login
+    a = Net::HTTP.post(
+      'https://www.google.com/accounts/ClientLogin',
+      {
+        'Email' => email,
+        'Passwd' => pass,
+        'service' => 'blogger',
+        'accountType' => 'HOSTED_OR_GOOGLE',
+        'source' => 'ujihisa-bloggervim-1'
+      }.map {|i, j| "#{i}=#{j}" }.join('&'),
+      {'Content-Type' => 'application/x-www-form-urlencoded'})
+    @@login = a.body.lines.to_a.maph {|i| i.split('=') }['Auth'].chomp
+  end
+
   # post :: String -> String -> String -> String -> IO String
   def self.post(email, pass, str, blogid)
     a = login(email, pass)
@@ -74,45 +112,6 @@ module Blogger
         "Authorization" => "GoogleLogin auth=#{a}",
         'Content-Type' => 'application/atom+xml'
       }).body
-  end
-
-
-  # list :: String -> IO [Hash]
-  def self.list(blogid)
-    xml = Net::HTTP.get(URI.parse("http://www.blogger.com/feeds/#{blogid}/posts/default"))
-    Nokogiri::XML(xml).xpath('//xmlns:entry[xmlns:link/@rel="alternate"]').
-      map {|i|
-        hash = {}
-        [:published, :updated, :title, :content].each {|s| hash[s] = i.at(s.to_s).content }
-        hash[:uri] = i.at('link[@rel="alternate"]')['href']
-        hash
-      }
-  end
-
-  # get :: String -> String -> IO [String]
-  def self.get(blogid, uri)
-    entry = list(blogid).find {|e| e[:uri] == uri }
-    entry[:title] + "\n\n" + IO.popen("#{File.dirname(__FILE__)}/html2text", 'r+') {|io|
-      io.puts entry[:content]
-      io.close_write
-      io.read
-    }
-  end
-
-  # login :: String -> String -> String
-  def self.login(email, pass)
-    return @@login if defined? @@login
-    a = Net::HTTP.post(
-      'https://www.google.com/accounts/ClientLogin',
-      {
-        'Email' => email,
-        'Passwd' => pass,
-        'service' => 'blogger',
-        'accountType' => 'HOSTED_OR_GOOGLE',
-        'source' => 'ujihisa-bloggervim-1'
-      }.map {|i, j| "#{i}=#{j}" }.join('&'),
-      {'Content-Type' => 'application/x-www-form-urlencoded'})
-    @@login = a.body.lines.to_a.maph {|i| i.split('=') }['Auth'].chomp
   end
 
   # text2xml :: String -> String

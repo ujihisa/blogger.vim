@@ -80,11 +80,14 @@ module Blogger
     Nokogiri::XML(xml).xpath('//xmlns:entry/xmlns:link[attribute::rel="alternate"]').map {|i| i['href'] }
   end
 
-  # get :: String -> IO [String]
-  def self.get(blogid)
-    xml = Net::HTTP.get(URI.parse("http://www.blogger.com/feeds/#{blogid}/posts/default"))
-    content = Nokogiri::XML(xml).xpath('//xmlns:entry/xmlns:content').first.content
+  # get :: String -> String -> IO [String]
+  def self.get(blogid, uri)
+    xml = Nokogiri::XML(Net::HTTP.get(URI.parse("http://www.blogger.com/feeds/#{blogid}/posts/default")))
+    title = xml.at("//xmlns:entry[xmlns:link/@href='#{uri}']/xmlns:content").content
+    content = xml.at("//xmlns:entry[xmlns:link/@href='#{uri}']/xmlns:content").content
     IO.popen("#{File.dirname(__FILE__)}/html2text", 'r+') {|io|
+      io.puts title
+      io.puts
       io.puts content
       io.close_write
       io.read
@@ -93,6 +96,7 @@ module Blogger
 
   # login :: String -> String -> String
   def self.login(email, pass)
+    return @@login if defined? @@login
     a = Net::HTTP.post(
       'https://www.google.com/accounts/ClientLogin',
       {
@@ -103,7 +107,7 @@ module Blogger
         'source' => 'ujihisa-bloggervim-1'
       }.map {|i, j| "#{i}=#{j}" }.join('&'),
       {'Content-Type' => 'application/x-www-form-urlencoded'})
-    a.body.lines.to_a.maph {|i| i.split('=') }['Auth'].chomp
+    @@login = a.body.lines.to_a.maph {|i| i.split('=') }['Auth'].chomp
   end
 
   # text2xml :: String -> String

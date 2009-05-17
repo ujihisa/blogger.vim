@@ -42,7 +42,7 @@ describe Blogger do
 
   describe '.update' do
     it 'updates the entry of the given uri with the argument string' do
-      uri = Blogger.list(@blogid).first
+      uri = Blogger.list(@blogid).first[:uri]
       uri = "http://kkkkkkkkkkkkkkkkk2ad.blogspot.com/2009/05/hi_7729.html"
       Blogger.update(@email, @pass, "*dummy*", @blogid, uri) # Dirty hack
       Blogger.update(@email, @pass, "hi updated\n\nupdated\n#{rand}\n\nyay!", @blogid, uri)
@@ -51,10 +51,18 @@ describe Blogger do
   end
 
   describe '.list' do
-    it 'retrieves blog posts' do
-      uris = Blogger.list(@blogid)
-      uris.should be_instance_of(Array)
-      uris.first.should match(/^http/)
+    it 'retrieves blog entry hashes' do
+      entries = Blogger.list(@blogid)
+
+      entries.should be_instance_of(Array)
+
+      entry = entries.first
+      entry.should be_instance_of(Hash)
+      entry[:uri].should match(/^http:/)
+      entry[:published].should match(/2009/)
+      entry[:updated].should match(/2009/)
+      entry[:title].should match(/hi/)
+      entry[:content].should match(/yay!/)
     end
 
     it 'is ordered by latest'
@@ -62,7 +70,7 @@ describe Blogger do
 
   describe '.get' do
     it 'retrieves the blog post of the argument' do
-      uri = Blogger.list(@blogid).first
+      uri = Blogger.list(@blogid).first[:uri]
       text = Blogger.get(@blogid, uri)
       text.should be_instance_of(String)
       text.should match(/yay!/)

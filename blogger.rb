@@ -74,10 +74,16 @@ module Blogger
   end
 
 
-  # list :: String -> IO [String]
+  # list :: String -> IO [Hash]
   def self.list(blogid)
     xml = Net::HTTP.get(URI.parse("http://www.blogger.com/feeds/#{blogid}/posts/default"))
-    Nokogiri::XML(xml).xpath('//xmlns:entry/xmlns:link[attribute::rel="alternate"]').map {|i| i['href'] }
+    Nokogiri::XML(xml).xpath('//xmlns:entry[xmlns:link/@rel="alternate"]').
+      map {|i|
+        hash = {}
+        [:published, :updated, :title, :content].each {|s| hash[s] = i.at(s.to_s).content }
+        hash[:uri] = i.at('link[@rel="alternate"]')['href']
+        hash
+      }
   end
 
   # get :: String -> String -> IO [String]

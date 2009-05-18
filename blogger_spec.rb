@@ -86,10 +86,10 @@ describe Blogger do
     end
   end
 
-  describe '.post' do
+  describe '.create' do
     it 'creates a new entry by the argument string' do
       token = Blogger.login(@email, @pass)
-      uri = Blogger.post(token, @new_entry_str, @blogid)
+      uri = Blogger.create(token, @new_entry_str, @blogid)
       uri.should match(/^http/)
     end
   end

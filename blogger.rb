@@ -71,8 +71,8 @@ module Blogger
     a.body.lines.to_a.maph {|i| i.split('=') }['Auth'].chomp
   end
 
-  # post :: String -> String -> String -> IO String
-  def self.post(token, str, blogid)
+  # create :: String -> String -> String -> IO String
+  def self.create(token, str, blogid)
     xml = Net::HTTP.post(
       "http://www.blogger.com/feeds/#{blogid}/posts/default",
       text2xml(str),

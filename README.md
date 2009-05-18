@@ -29,23 +29,24 @@ After the install of metarw, do them:
     $ cp blogger.rb ~/.vim/autoload/metarw/
     $ cp html2text ~/.vim/autoload/metarw/
     $ chmod +x ~/.vim/autoload/metarw/html2text
+    $ cat "g:blogger_blogid = 'your_blogid_here'" > ~/.vimrc
     $ cat "g:blogger_email = 'your_email_here'" > ~/.vimrc
     $ cat "g:blogger_pass = 'your_blogger_password_here'" > ~/.vimrc
-
-### Get the list of entries from your blog
-
-    :e blogger:{blogid}:list
 
 `{blogid}` is a big digit number. See your blog. There must be it.
 
 sample blogid: 2961087480852727381
+
+### Get the list of entries from your blog
+
+    :e blogger:list
 
 ### Create a new entry to your blog
 
 Write an entry on a buffer. Write the title on the first line, and the content on the rest of lines.
 To post it, type
 
-    :w blogger:{blogid}:create
+    :w blogger:create
 
 If an error came, try `:w!` instead.
 
@@ -117,3 +118,5 @@ Implement them:
 * html2text of python cannot handle multi-byte characters
 * html2text does not neccessarily decode markdown. (e.g. continuous <li>s)
 * Blogger.update needs to be called twice
+
+# vim: filetype=mkd

@@ -69,14 +69,14 @@ endfunction
 function! metarw#blogger#read(fakepath)  "{{{2
   let _ = s:parse_incomplete_fakepath(a:fakepath)
   if _.method == 'show'
-    return ['read', printf('!ruby %s/blogger.rb show %s %s', s:scriptdir, _.blogid, _.uri)]
+    return ['read', printf('!ruby %s/blogger.rb show %s %s', s:scriptdir, g:blogger_blogid, _.uri)]
   elseif _.method == 'list'
     let s:browse = []
-    for entry in split(system(printf('ruby %s/blogger.rb list %s', s:scriptdir, _.blogid)), "\n")
+    for entry in split(system(printf('ruby %s/blogger.rb list %s', s:scriptdir, g:blogger_blogid)), "\n")
       let uri = split(entry, " -- ")[-1]
       let s:browse = add(s:browse, {
       \  'label': entry,
-      \  'fakepath': 'blogger:' . _.blogid . ':' . uri})
+      \  'fakepath': 'blogger:' . uri})
     endfor
     return ['browse', s:browse]
   else
@@ -91,9 +91,9 @@ endfunction
 function! metarw#blogger#write(fakepath, line1, line2, append_p)  "{{{2
   let _ = s:parse_incomplete_fakepath(a:fakepath)
   if _.method == 'show'
-    return ['write', printf('!ruby %s/blogger.rb update %s %s %s %s', s:scriptdir, _.blogid, _.uri, g:blogger_email, g:blogger_pass)]
+    return ['write', printf('!ruby %s/blogger.rb update %s %s %s %s', s:scriptdir, g:blogger_blogid, _.uri, g:blogger_email, g:blogger_pass)]
   elseif _.method == 'create'
-    return ['write', printf('!ruby %s/blogger.rb create %s %s %s', s:scriptdir, _.blogid, g:blogger_email, g:blogger_pass)]
+    return ['write', printf('!ruby %s/blogger.rb create %s %s %s', s:scriptdir, g:blogger_blogid, g:blogger_email, g:blogger_pass)]
   else
     " TODO: Detail information on error
     return ['error', '???']
@@ -111,7 +111,6 @@ function! s:parse_incomplete_fakepath(incomplete_fakepath)  "{{{2
   "
   " scheme              {scheme} part in a:incomplete_fakepath (always 'blogger')
   "
-  " blogid              'blogger:{blogid}:...'
   " entry_id            'blogger:...:{uri}' or nil
   " method              'create', 'list' or 'show'
   let _ = {}
@@ -125,19 +124,16 @@ function! s:parse_incomplete_fakepath(incomplete_fakepath)  "{{{2
   let _.given_fakepath = a:incomplete_fakepath
   let _.scheme = fragments[0]
 
-  " {blogid}
-  let _.blogid = fragments[1]
-
-  if len(fragments) <= 2
+  if len(fragments) < 2
     " error
-  elseif fragments[2] == 'create'
+  elseif fragments[1] == 'create'
     let _.method = 'create'
-  elseif fragments[2] == 'list'
+  elseif fragments[1] == 'list'
     let _.method = 'list'
   else
     let _.method = 'show'
     " {uri}
-    let _.uri = join(fragments[2:-1], ":")
+    let _.uri = join(fragments[1:-1], ":")
   endif
 
   return _

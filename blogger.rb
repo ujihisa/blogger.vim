@@ -72,24 +72,21 @@ module Blogger
     @@login = a.body.lines.to_a.maph {|i| i.split('=') }['Auth'].chomp
   end
 
-  # post :: String -> String -> String -> String -> IO String
-  def self.post(email, pass, str, blogid)
-    a = login(email, pass)
+  # post :: String -> String -> String -> IO String
+  def self.post(token, str, blogid)
     xml = Net::HTTP.post(
       "http://www.blogger.com/feeds/#{blogid}/posts/default",
       text2xml(str),
       {
-        "Authorization" => "GoogleLogin auth=#{a}",
+        "Authorization" => "GoogleLogin auth=#{token}",
         'Content-Type' => 'application/atom+xml'
       }).body
     raise RateLimitException if xml == "Blog has exceeded rate limit or otherwise requires word verification for new posts"
     Nokogiri::XML(xml).at('//xmlns:link[@rel="alternate"]')['href']
   end
 
-  # update :: String -> String -> String -> String -> String -> IO ()
-  def self.update(email, pass, str, blogid, uri)
-    a = login(email, pass)
-
+  # update :: String -> String -> String -> String -> IO ()
+  def self.update(token, str, blogid, uri)
     lines = str.lines.to_a
     title = lines.shift.strip
     body = Markdown.new(lines.join).to_html
@@ -108,7 +105,7 @@ module Blogger
       put_uri,
       xml.at('//xmlns:entry').to_s,
       {
-        "Authorization" => "GoogleLogin auth=#{a}",
+        "Authorization" => "GoogleLogin auth=#{token}",
         'Content-Type' => 'application/atom+xml'
       }).body
   end

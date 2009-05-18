@@ -136,6 +136,7 @@ if __FILE__ == $0
   when 'create'
     puts Blogger.create(ARGV[0], Blogger.login(ARGV[1], ARGV[2]), STDIN.read)
   when 'update'
+    Blogger.update(ARGV[0], ARGV[1], Blogger.login(ARGV[2], ARGV[3]), STDIN.read) # FIXME: dirty hack
     puts Blogger.update(ARGV[0], ARGV[1], Blogger.login(ARGV[2], ARGV[3]), STDIN.read)
   else
     puts "read README.md"

@@ -106,9 +106,9 @@ All specs must be success or pending.
 
 Implement them:
 
-* Use Metarw
 * Write document (~/.vim/doc/blogger.txt)
-* Release Version 1.0 to vim.org
+* Re-organize the package
+* Release Version 1.1 to vim.org
 * Remove python and html2text. Blogger.vim should not need both ruby and python.
 * Multiblogalization (Now blogger.vim can control only one blog with a vimrc)
 

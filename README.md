@@ -26,6 +26,9 @@ Before you use blogger.vim, you have to change the setting of blogger [like it](
 After the install of metarw, do them:
 
     $ cp blogger.vim ~/.vim/autoload/metarw/
+    $ cp blogger.rb ~/.vim/autoload/metarw/
+    $ cp html2text ~/.vim/autoload/metarw/
+    $ chmod +x ~/.vim/autoload/metarw/html2text
     $ cat "g:blogger_email = 'your_email_here'" > ~/.vimrc
     $ cat "g:blogger_pass = 'your_blogger_password_here'" > ~/.vimrc
 
@@ -36,6 +39,15 @@ After the install of metarw, do them:
 `{blogid}` is a big digit number. See your blog. There must be it.
 
 sample blogid: 2961087480852727381
+
+### Create a new entry to your blog
+
+Write an entry on a buffer. Write the title on the first line, and the content on the rest of lines.
+To post it, type
+
+    :w blogger:{blogid}:create
+
+If an error came, try `:w!` instead.
 
 ### blogger.rb
 

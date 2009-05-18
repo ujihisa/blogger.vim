@@ -72,7 +72,7 @@ module Blogger
   end
 
   # create :: String -> String -> String -> IO String
-  def self.create(token, str, blogid)
+  def self.create(blogid, token, str)
     xml = Net::HTTP.post(
       "http://www.blogger.com/feeds/#{blogid}/posts/default",
       text2xml(str),
@@ -85,7 +85,7 @@ module Blogger
   end
 
   # update :: String -> String -> String -> String -> IO ()
-  def self.update(token, str, blogid, uri)
+  def self.update(blogid, uri, token, str)
     lines = str.lines.to_a
     title = lines.shift.strip
     body = Markdown.new(lines.join).to_html

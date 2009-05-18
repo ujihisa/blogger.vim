@@ -89,7 +89,7 @@ describe Blogger do
   describe '.create' do
     it 'creates a new entry by the argument string' do
       token = Blogger.login(@email, @pass)
-      uri = Blogger.create(token, @new_entry_str, @blogid)
+      uri = Blogger.create(@blogid, token, @new_entry_str)
       uri.should match(/^http/)
     end
   end
@@ -99,8 +99,8 @@ describe Blogger do
       uri = Blogger.list(@blogid).first[:uri]
       uri = 'http://kkkkkkkkkkkkw.blogspot.com/2009/05/hi_17.html'
       token = Blogger.login(@email, @pass)
-      Blogger.update(token, "*dummy*", @blogid, uri) # Dirty hack
-      Blogger.update(token, "hi updated\n\nupdated\n#{rand}\n\nyay!", @blogid, uri)
+      Blogger.update(@blogid, uri, token, "*dummy*") # Dirty hack
+      Blogger.update(@blogid, uri, token, "hi updated\n\nupdated\n#{rand}\n\nyay!")
       Blogger.show(@blogid, uri).should match(/updated/)
     end
   end

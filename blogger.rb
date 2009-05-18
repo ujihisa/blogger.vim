@@ -40,10 +40,9 @@ module Blogger
     xml = Net::HTTP.get(URI.parse("http://www.blogger.com/feeds/#{blogid}/posts/default"))
     Nokogiri::XML(xml).xpath('//xmlns:entry[xmlns:link/@rel="alternate"]').
       map {|i|
-        hash = {}
-        [:published, :updated, :title, :content].each {|s| hash[s] = i.at(s.to_s).content }
-        hash[:uri] = i.at('link[@rel="alternate"]')['href']
-        hash
+        [:published, :updated, :title, :content].
+          maph {|s| [s, i.at(s.to_s).content] }.
+          update(:uri => i.at('link[@rel="alternate"]')['href'])
       }
   end
 

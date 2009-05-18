@@ -24,6 +24,22 @@ Before you use blogger.vim, you have to change the setting of blogger.
 
 ![Convert line breaks](http://gyazo.com/7c8b02a1a3e41fb665347323bf4fab84.png)
 
+### blogger.rb
+
+blogger.rb can do them:
+
+* Get the list of the entries of your blog
+* Show the contents of an entry in markdown notation
+* Post a new entry with markdown notation
+* Edit an entry
+
+The corresponding usage:
+
+    $ ruby blogger.rb list {blogid}
+    $ ruby blogger.rb show {uri}
+    $ ruby blogger.rb create {email} {password} < aaa.txt
+    $ ruby blogger.rb update {uri} {email} {password} < aaa.txt
+
 ## Licence
 
 MIT

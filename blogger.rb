@@ -126,3 +126,18 @@ module Blogger
     EOF
   end
 end
+
+if __FILE__ == $0
+  case ARGV.shift
+  when 'list'
+    puts Blogger.list(ARGV[0]).map {|e| "#{e[:title]} -- #{e[:uri]}" }
+  when 'show'
+    puts Blogger.show(ARGV[0], ARGV[1])
+  when 'create'
+    puts Blogger.create(ARGV[0], Blogger.login(ARGV[1], ARGV[2]), STDIN.read)
+  when 'update'
+    puts Blogger.update(ARGV[0], ARGV[1], Blogger.login(ARGV[2], ARGV[3]), STDIN.read)
+  else
+    puts "read README.md"
+  end
+end

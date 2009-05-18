@@ -46,8 +46,8 @@ module Blogger
       }
   end
 
-  # get :: String -> String -> IO [String]
-  def self.get(blogid, uri)
+  # show :: String -> String -> IO [String]
+  def self.show(blogid, uri)
     entry = list(blogid).find {|e| e[:uri] == uri }
     entry[:title] + "\n\n" + IO.popen("#{File.dirname(__FILE__)}/html2text", 'r+') {|io|
       io.puts entry[:content]

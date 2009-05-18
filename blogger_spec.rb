@@ -69,10 +69,10 @@ describe Blogger do
     end
   end
 
-  describe '.get' do
+  describe '.show' do
     it 'retrieves the blog post of the argument' do
       uri = Blogger.list(@blogid).first[:uri]
-      text = Blogger.get(@blogid, uri)
+      text = Blogger.show(@blogid, uri)
       text.should be_instance_of(String)
       text.should match(/yay!/)
     end
@@ -101,7 +101,7 @@ describe Blogger do
       token = Blogger.login(@email, @pass)
       Blogger.update(token, "*dummy*", @blogid, uri) # Dirty hack
       Blogger.update(token, "hi updated\n\nupdated\n#{rand}\n\nyay!", @blogid, uri)
-      Blogger.get(@blogid, uri).should match(/updated/)
+      Blogger.show(@blogid, uri).should match(/updated/)
     end
   end
 

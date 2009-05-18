@@ -80,7 +80,8 @@ function! metarw#blogger#read(fakepath)  "{{{2
     endfor
     return ['browse', s:browse]
   else
-    " TODO: error
+    " TODO: Detail information on error
+    return ['error', '???']
   endif
 endfunction
 
@@ -94,7 +95,8 @@ function! metarw#blogger#write(fakepath, line1, line2, append_p)  "{{{2
   elseif _.method == 'create'
     return ['write', printf('!ruby %s/blogger.rb create %s %s %s', s:scriptdir, _.blogid, g:blogger_email, g:blogger_pass)]
   else
-    " TODO: error
+    " TODO: Detail information on error
+    return ['error', '???']
   endif
 endfunction
 

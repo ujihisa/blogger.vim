@@ -12,7 +12,7 @@ Tatsuhiro UJIHISA [http://ujihisa.blogspot.com/](http://ujihisa.blogspot.com/)
 
 * vim 7.2+
   * [metarw 0.0.3+](http://www.vim.org/scripts/script.php?script_id=2335)
-* ruby 1.9.2+
+* ruby 1.9.1+
   * (gem) nokogiri 1.2.3+
   * (gem) rpeg-markdown 1.4.4+
 * python 2.5.1+
@@ -74,7 +74,7 @@ All specs must be success or pending.
 Implement them:
 
 * Use Metarw
-* Write document
+* Write document (~/.vim/doc/blogger.txt)
 * Release Version 1.0 to vim.org
 * Remove python and html2text. Blogger.vim should not need both ruby and python.
 * Multiblogalization (Now blogger.vim can control only one blog with a vimrc)

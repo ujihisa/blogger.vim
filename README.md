@@ -36,9 +36,9 @@ blogger.rb can do them:
 The corresponding usage:
 
     $ ruby blogger.rb list {blogid}
-    $ ruby blogger.rb show {uri}
-    $ ruby blogger.rb create {email} {password} < aaa.txt
-    $ ruby blogger.rb update {uri} {email} {password} < aaa.txt
+    $ ruby blogger.rb show {blogid} {uri}
+    $ ruby blogger.rb create {blogid} {email} {password} < aaa.txt
+    $ ruby blogger.rb update {blogid} {uri} {email} {password} < aaa.txt
 
 ## Licence
 
@@ -64,8 +64,10 @@ Implement them:
 * Write document
 * Release Version 1.0 to vim.org
 * Remove python and html2text. Blogger.vim should not need both ruby and python.
+* Multiblogalization (Now blogger.vim can control only one blog with a vimrc)
 
 ### Known bugs
 
 * html2text of python cannot handle multi-byte characters
+* html2text does not neccessarily decode markdown. (e.g. continuous <li>s)
 * Blogger.update needs to be called twice

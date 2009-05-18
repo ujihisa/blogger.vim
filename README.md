@@ -24,6 +24,21 @@ Before you use blogger.vim, you have to change the setting of blogger.
 
 ![Convert line breaks](http://gyazo.com/7c8b02a1a3e41fb665347323bf4fab84.png)
 
+### Install
+After the install of metarw, do them:
+
+    $ cp blogger.vim ~/.vim/autoload/metarw/
+    $ cat "g:blogger_email = 'your_email_here'" > ~/.vimrc
+    $ cat "g:blogger_pass = 'your_blogger_password_here'" > ~/.vimrc
+
+### Get the list of entries from your blog
+
+    :e blogger:{blogid}:list
+
+`{blogid}` is a big digit number. See your blog. There must be it.
+
+sample blogid: 2961087480852727381
+
 ### blogger.rb
 
 blogger.rb can do them:

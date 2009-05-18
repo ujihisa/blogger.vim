@@ -20,9 +20,7 @@ Tatsuhiro UJIHISA [http://ujihisa.blogspot.com/](http://ujihisa.blogspot.com/)
 
 ## How to use
 
-Before you use blogger.vim, you have to change the setting of blogger.
-
-![Convert line breaks](http://gyazo.com/7c8b02a1a3e41fb665347323bf4fab84.png)
+Before you use blogger.vim, you have to change the setting of blogger [like it](http://gyazo.com/7c8b02a1a3e41fb665347323bf4fab84.png).
 
 ### Install
 After the install of metarw, do them:

@@ -25,7 +25,7 @@
 " FIXME: metarw#blogger#complete NOT IMPLEMENTED!
 "   The following metarw#blogger#complete() is just the copy from metarw-git
 " script variables {{{2
-let s:scriptdir = expand('<sfile>:p:h')
+let s:blogger_rb_command = printf('ruby %s/blogger.rb', expand('<sfile>:p:h'))
 function! metarw#blogger#complete(arglead, cmdline, cursorpos)  "{{{2
   " a:arglead always contains "blogger:".
   let _ = s:parse_incomplete_fakepath(a:arglead)
@@ -69,10 +69,10 @@ endfunction
 function! metarw#blogger#read(fakepath)  "{{{2
   let _ = s:parse_incomplete_fakepath(a:fakepath)
   if _.method == 'show'
-    return ['read', printf('!ruby %s/blogger.rb show %s %s', s:scriptdir, g:blogger_blogid, _.uri)]
+    return ['read', printf('!%s show %s %s', s:blogger_rb_command, g:blogger_blogid, _.uri)]
   elseif _.method == 'list'
     let s:browse = []
-    for entry in split(system(printf('ruby %s/blogger.rb list %s', s:scriptdir, g:blogger_blogid)), "\n")
+    for entry in split(system(printf('%s list %s', s:blogger_rb_command, g:blogger_blogid)), "\n")
       let uri = split(entry, " -- ")[-1]
       let s:browse = add(s:browse, {
       \  'label': entry,
@@ -91,9 +91,9 @@ endfunction
 function! metarw#blogger#write(fakepath, line1, line2, append_p)  "{{{2
   let _ = s:parse_incomplete_fakepath(a:fakepath)
   if _.method == 'show'
-    return ['write', printf('!ruby %s/blogger.rb update %s %s %s %s', s:scriptdir, g:blogger_blogid, _.uri, g:blogger_email, g:blogger_pass)]
+    return ['write', printf('!%s update %s %s %s %s', s:blogger_rb_command, g:blogger_blogid, _.uri, g:blogger_email, g:blogger_pass)]
   elseif _.method == 'create'
-    return ['write', printf('!ruby %s/blogger.rb create %s %s %s', s:scriptdir, g:blogger_blogid, g:blogger_email, g:blogger_pass)]
+    return ['write', printf('!%s create %s %s %s', s:blogger_rb_command, g:blogger_blogid, g:blogger_email, g:blogger_pass)]
   else
     " TODO: Detail information on error
     return ['error', '???']

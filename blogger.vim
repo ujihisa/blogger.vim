@@ -111,7 +111,7 @@ function! s:parse_incomplete_fakepath(incomplete_fakepath)  "{{{2
   "
   " scheme              {scheme} part in a:incomplete_fakepath (always 'blogger')
   "
-  " entry_id            'blogger:...:{uri}' or nil
+  " uri                 'blogger:...:{uri}' or nil
   " method              'create', 'list' or 'show'
   let _ = {}
 

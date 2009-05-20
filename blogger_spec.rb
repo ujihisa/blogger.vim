@@ -1,5 +1,11 @@
 require 'blogger.rb'
 
+class DateTime
+  def inspect
+    to_s
+  end
+end
+
 describe 'Net::HTTP' do
   describe '.__post_or_put__' do
     it 'wraps posting using .new, #post and #body' do
@@ -63,7 +69,7 @@ describe Blogger do
 
     it 'is ordered by latest' do
       entries = Blogger.list(@blogid).map {|e|
-        DateTime.parse(e[:updated])
+        DateTime.parse(e[:published])
       }
       entries.sort.reverse.should == entries
     end

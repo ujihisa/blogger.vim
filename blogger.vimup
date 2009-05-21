@@ -1,0 +1,16 @@
+"script_name": blogger.vim
+"script_id": 2638
+"script_type": utility
+"script_package": "{script_name}-{version}.zip"
+"required_vim_version": 7.2
+"summary": The only one vim script which handles Blogger. Powered by Metarw.
+"detailed_description": "See http://github.com/ujihisa/blogger.vim/tree/master"
+"install_details":
+"versions":
+  1.1: |
+      * [Feature] Changed the fakepath scheme of metarw
+        * blogger:{blogid}:something -> blogger:something
+        * This change needs you to add g:blogger_blogid on your vimrc
+      * [Bugfix] The bug which occurs in updating an exist blog post was fixed
+      * [Bugfix] The bug of the ways of handling the multi line codes of  html2text code was fixed
+  1.0: Initial upload

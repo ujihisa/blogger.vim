@@ -7,6 +7,8 @@
 "detailed_description": "See http://github.com/ujihisa/blogger.vim/tree/master"
 "install_details":
 "versions":
+  - '1.2': |
+      * [Feature] Automatically rename the fakepath after creating a blog post.
   - '1.1': |
       * [Feature] Changed the fakepath scheme of metarw
         * blogger:{blogid}:something -> blogger:something
@@ -14,3 +16,4 @@
       * [Bugfix] The bug which occurs in updating an exist blog post was fixed
       * [Bugfix] The bug of the ways of handling the multi line codes of  html2text code was fixed
   - '1.0': Initial upload
+# vim: filetype=yaml

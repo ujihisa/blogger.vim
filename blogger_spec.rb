@@ -102,8 +102,7 @@ describe Blogger do
 
   describe '.update' do
     it 'updates the entry of the given uri with the argument string' do
-      uri = Blogger.list(@blogid).first[:uri]
-      uri = 'http://wwwwwwwwwwwwwwwwwwzw3.blogspot.com/2009/05/hi_20.html'
+      uri = Blogger.list(@blogid)[2][:uri]
       token = Blogger.login(@email, @pass)
       Blogger.update(@blogid, uri, token, "hi updated\n\nupdated\n#{rand}\n\nyay!")
       Blogger.show(@blogid, uri).should match(/updated/)
@@ -129,6 +128,12 @@ describe Blogger do
       |<li>item1</li>
       |<li>item2</li>
       |</ul>
+      |<pre><code>
+      |this is
+      |a pen
+      |
+      |hehehe
+      |</code></pre>
       EOF
       text = <<-EOF.gsub(/^\s+\|/, '')
       |It's sunny today. yay!
@@ -136,6 +141,16 @@ describe Blogger do
       |  * item1
       |
       |  * item2
+      |
+      |
+      |
+      |    this is
+      |
+      |    a pen
+      |
+      |
+      |    hehehe
+      |
       |
       |
       EOF

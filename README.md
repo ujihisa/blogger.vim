@@ -16,7 +16,7 @@ Tatsuhiro UJIHISA [http://ujihisa.blogspot.com/](http://ujihisa.blogspot.com/)
   * (gem) nokogiri 1.2.3+
   * (gem) rpeg-markdown 1.4.4+
 * python 2.5.1+
-  * html2text 2.35+
+  * html2text.py 2.35+
 
 ## How to use
 
@@ -29,11 +29,14 @@ After the install of metarw, do them:
     $ cp blogger.rb ~/.vim/autoload/metarw/
     $ cp html2text ~/.vim/autoload/metarw/
     $ chmod +x ~/.vim/autoload/metarw/html2text
-    $ cat "g:blogger_blogid = 'your_blogid_here'" > ~/.vimrc
-    $ cat "g:blogger_email = 'your_email_here'" > ~/.vimrc
-    $ cat "g:blogger_pass = 'your_blogger_password_here'" > ~/.vimrc
 
-`{blogid}` is a big digit number. See your blog. There must be it.
+And then add the following to your .vimrc:
+
+    let g:blogger_blogid = 'your_blogid_here'
+    let g:blogger_email = 'your_email_here'
+    let g:blogger_pass = 'your_blogger_password_here'
+
+`{blogid}` is a big digit number. See the html source of your blog and find  `blogId=****`.
 
 sample blogid: 2961087480852727381
 

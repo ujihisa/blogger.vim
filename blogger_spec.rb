@@ -118,4 +118,28 @@ describe Blogger do
       doc.xpath('//div/p').first.content.should match(/It's sunny today/)
     end
   end
+
+  describe '.html2text' do
+    it 'encodes html to markdown style text' do
+      html = <<-EOF.gsub(/^\s+\|/, '')
+      |<p>It's sunny today.
+      |yay!</p>
+
+      |<ul>
+      |<li>item1</li>
+      |<li>item2</li>
+      |</ul>
+      EOF
+      text = <<-EOF.gsub(/^\s+\|/, '')
+      |It's sunny today. yay!
+      |
+      |  * item1
+      |
+      |  * item2
+      |
+      |
+      EOF
+      Blogger.html2text(html).should == text
+    end
+  end
 end

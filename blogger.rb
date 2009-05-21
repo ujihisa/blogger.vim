@@ -49,11 +49,7 @@ module Blogger
   # show :: String -> String -> IO [String]
   def self.show(blogid, uri)
     entry = list(blogid).find {|e| e[:uri] == uri }
-    entry[:title] + "\n\n" + IO.popen("#{File.dirname(__FILE__)}/html2text", 'r+') {|io|
-      io.puts entry[:content]
-      io.close_write
-      io.read
-    }
+    entry[:title] + "\n\n" + html2text(entry[:content])
   end
 
   # login :: String -> String -> String
@@ -120,6 +116,15 @@ module Blogger
     |  </content>
     |</entry>
     EOF
+  end
+
+  # html2text :: String -> String
+  def self.html2text(html)
+    IO.popen("#{File.dirname(__FILE__)}/html2text", 'r+') {|io|
+      io.puts html
+      io.close_write
+      io.read
+    }
   end
 end
 

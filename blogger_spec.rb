@@ -145,13 +145,9 @@ describe Blogger do
       |
       |
       |    this is
-      |
       |    a pen
       |
-      |
       |    hehehe
-      |
-      |
       |
       EOF
       Blogger.html2text(html).should == text

@@ -108,8 +108,6 @@ All specs must be success or pending.
 Implement them:
 
 * Write document (~/.vim/doc/blogger.txt)
-* Re-organize the package
-* Release Version 1.1 to vim.org
 * Remove python and html2text. Blogger.vim should not need both ruby and python.
 * Multiblogalization (Now blogger.vim can control only one blog with a vimrc)
 
@@ -117,6 +115,5 @@ Implement them:
 
 * html2text of python cannot handle multi-byte characters
 * html2text does not neccessarily decode markdown. (e.g. continuous <li>s)
-* Blogger.update needs to be called twice
 
 # vim: filetype=mkd

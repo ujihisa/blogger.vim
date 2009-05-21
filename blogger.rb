@@ -79,9 +79,9 @@ module Blogger
       {
         "Authorization" => "GoogleLogin auth=#{token}",
         'Content-Type' => 'application/atom+xml'
-      }).body
-    raise RateLimitException if xml == "Blog has exceeded rate limit or otherwise requires word verification for new posts"
-    Nokogiri::XML(xml).at('//xmlns:link[@rel="alternate"]')['href']
+      })
+    raise RateLimitException if xml.body == "Blog has exceeded rate limit or otherwise requires word verification for new posts"
+    Nokogiri::XML(xml.body).at('//xmlns:link[@rel="alternate"]')['href']
   end
 
   # update :: String -> String -> String -> String -> IO ()
@@ -94,19 +94,15 @@ module Blogger
     xml = Nokogiri::XML(xml)
     put_uri = xml.at("//xmlns:entry[xmlns:link/@href='#{uri}']/xmlns:link[@rel='edit']")['href']
     xml.at("//xmlns:entry[xmlns:link/@href='#{uri}']/xmlns:title").content = title
-    xml.at("//xmlns:entry[xmlns:link/@href='#{uri}']/xmlns:content").content = <<-EOF.gsub(/^\s*\|/, '')
-    |<div xmlns="http://www.w3.org/1999/xhtml">
-    |  #{body}
-    |</div>
-    EOF
-    xml.at('//xmlns:entry')['xmlns'] = 'http://www.w3.org/2005/Atom'
+    xml.at("//xmlns:entry[xmlns:link/@href='#{uri}']/xmlns:content").content = body
+    xml.at("//xmlns:entry[xmlns:link/@href='#{uri}']")['xmlns'] = 'http://www.w3.org/2005/Atom'
     Net::HTTP.put(
       put_uri,
-      xml.at('//xmlns:entry').to_s,
+      xml.at("//xmlns:entry[xmlns:link/@href='#{uri}']").to_s,
       {
         "Authorization" => "GoogleLogin auth=#{token}",
         'Content-Type' => 'application/atom+xml'
-      }).body
+      })
   end
 
   # text2xml :: String -> String
@@ -136,7 +132,6 @@ if __FILE__ == $0
   when 'create'
     puts Blogger.create(ARGV[0], Blogger.login(ARGV[1], ARGV[2]), STDIN.read)
   when 'update'
-    Blogger.update(ARGV[0], ARGV[1], Blogger.login(ARGV[2], ARGV[3]), STDIN.read) # FIXME: dirty hack
     puts Blogger.update(ARGV[0], ARGV[1], Blogger.login(ARGV[2], ARGV[3]), STDIN.read)
   else
     puts "read README.md"

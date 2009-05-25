@@ -11,9 +11,9 @@ task :zip do
   exit unless STDIN.gets.chomp == 'y'
 
   sh "mkdir -p blogger-#{version}/autoload/metarw"
-  sh "cp", "blogger.vim", "blogger-#{version}/autoload/metarw/"
-  sh "cp", "blogger.rb", "blogger-#{version}/autoload/metarw/"
-  sh "cp", "html2text", "blogger-#{version}/autoload/metarw/"
+  BLOGGER_FILES.each do |f|
+    sh "cp", f, "blogger-#{version}/autoload/metarw/"
+  end
   sh "zip -r blogger-#{version}.zip blogger-#{version}"
   sh "rm -r blogger-#{version}"
 end

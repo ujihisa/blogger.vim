@@ -9,6 +9,9 @@
 "versions":
   - '1.2': |
       * [Feature] Automatically rename the fakepath after creating a blog post.
+      * [Bugfix] Enabled to post with Inline HTML
+      * [Feature] Added Rakefile for an installer (Thanks From Kyushu!)
+      * [Bugfix] Fixed the wrong install document (Thanks Karl Schudt!)
   - '1.1': |
       * [Feature] Changed the fakepath scheme of metarw
         * blogger:{blogid}:something -> blogger:something

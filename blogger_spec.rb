@@ -46,7 +46,8 @@ end
 
 describe Blogger do
   before(:each) do
-    @new_entry_str = "hi\n\nIt's sunny today.\nyay!\n\n* item1\n* item2"
+    @new_entry_str = "hi\n\nIt's sunny today.\nyay!\n\n* item1\n* item2\n\n" <<
+    '<object width="425" height="344"><param name="movie"></param><embed src="http://www.youtube.com/v/UF8uR6Z6KLc&hl=en&fs=1" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="425" height="344"></embed></object>'
     @email = 'blogger.vim@gmail.com'
     @pass = 'bloggervimvim' # I hope you never change it...
     @blogid = '7772225564702673313'

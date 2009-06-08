@@ -93,7 +93,16 @@ function! metarw#blogger#write(fakepath, line1, line2, append_p)  "{{{2
   if _.method == 'show'
     return ['write', printf('!%s update %s %s %s %s', s:blogger_rb_command, g:blogger_blogid, _.uri, g:blogger_email, g:blogger_pass)]
   elseif _.method == 'create'
-    return ['write', printf('!%s create %s %s %s', s:blogger_rb_command, g:blogger_blogid, g:blogger_email, g:blogger_pass)]
+    let v = '"' . tempname() . '"'
+    return ['write',
+    \       printf('!%s create %s %s %s > %s',
+    \              s:blogger_rb_command,
+    \              g:blogger_blogid,
+    \              g:blogger_email,
+    \              g:blogger_pass,
+    \              v),
+    \       'call metarw#blogger#filefile('.v.') | call delete('.v.')']
+    " ('.v.') < hi
   else
     " TODO: Detail information on error
     return ['error', '???']
@@ -102,6 +111,9 @@ endfunction
 
 
 
+function! metarw#blogger#filefile(filename)  "{{{2
+  execute "file blogger:" . readfile(a:filename)[0]
+endfunction
 function! s:parse_incomplete_fakepath(incomplete_fakepath)  "{{{2
   " Return value '_' has the following items:
   "

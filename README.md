@@ -6,7 +6,7 @@ Blogger is a blog service that offers \*.blogspot.com. Therefore you would feel 
 
 ## Author
 
-Tatsuhiro UJIHISA [http://ujihisa.blogspot.com/](http://ujihisa.blogspot.com/)
+Tatsuhiro UJIHISA <http://ujihisa.blogspot.com/>
 
 ## Requirements
 
@@ -73,7 +73,7 @@ The corresponding usage:
 
 MIT license
 
-Copyright (C) 2009 Tatsuhiro UJIHISA [<http://ujihisa.blogspot.com/>](http://ujihisa.blogspot.com/)
+Copyright (C) 2009 Tatsuhiro UJIHISA <http://ujihisa.blogspot.com/>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

@@ -53,6 +53,12 @@ To post it, type
 
 If an error came, try `:w!` instead.
 
+### FAQ
+
+* Q. I put the youbute embed into my blog, but it doesn't appear.
+
+        A. That's because of '&' in the html. You must replace '&' to '&amp;' by hand.
+
 ### blogger.rb
 
 blogger.rb can do them:

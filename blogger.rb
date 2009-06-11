@@ -106,7 +106,7 @@ module Blogger
     lines = text.lines.to_a
     title = lines.shift.strip
     body = Markdown.new(lines.join).to_html
-    body = body.gsub('&amp;', '&').gsub('&', '&amp;') # For inline HTML Syntax
+    # body = body.gsub('&amp;', '&').gsub('&', '&amp;') # For inline HTML Syntax
     <<-EOF.gsub(/^\s*\|/, '')
     |<entry xmlns='http://www.w3.org/2005/Atom'>
     |  <title type='text'>#{title}</title>

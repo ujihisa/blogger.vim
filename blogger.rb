@@ -149,7 +149,11 @@ if __FILE__ == $0
   when 'show'
     puts Blogger.show(ARGV[0], ARGV[1])
   when 'create'
-    puts Blogger.create(ARGV[0], Blogger.login(ARGV[1], ARGV[2]), STDIN.read)
+    uri = Blogger.create(ARGV[0], Blogger.login(ARGV[1], ARGV[2]), STDIN.read)
+    if /darwin/ =~ RUBY_PLATFORM
+      system "echo '#{uri}' | pbcopy >&/dev/null" rescue nil
+    end
+    puts uri
   when 'update'
     puts Blogger.update(ARGV[0], ARGV[1], Blogger.login(ARGV[2], ARGV[3]), STDIN.read)
   else

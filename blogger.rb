@@ -122,23 +122,11 @@ module Blogger
   # html2text :: String -> String
   def self.html2text(html)
     memo = []
-    IO.popen("#{File.dirname(__FILE__)}/html2text", 'r+') {|io|
+    IO.popen('html2markdown', 'r+') {|io|
       io.puts html
       io.close_write
-
-      mode = :normal
-      while line = io.gets do
-        if /^    / =~ line
-          mode = :code
-        elsif line.chomp == '' && mode == :code
-          line = io.gets
-        else
-          mode = :normal
-        end
-        memo << line
-      end
+      io.read
     }
-    memo.join
   end
 end
 

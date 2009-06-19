@@ -139,16 +139,15 @@ describe Blogger do
       text = <<-EOF.gsub(/^\s+\|/, '')
       |It's sunny today. yay!
       |
-      |  * item1
-      |
-      |  * item2
-      |
-      |
+      |-   item1
+      |-   item2
       |
       |    this is
       |    a pen
-      |
+      |    
       |    hehehe
+      |
+      |
       |
       EOF
       Blogger.html2text(html).should == text

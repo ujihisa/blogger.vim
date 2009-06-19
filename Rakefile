@@ -2,7 +2,7 @@ require 'fileutils'
 
 RUNTIME_PATH = "#{ENV["HOME"]}/.vim"
 METARW_PATH = "#{RUNTIME_PATH}/autoload/metarw"
-BLOGGER_FILES= ["blogger.vim","blogger.rb","html2text"]
+BLOGGER_FILES= ["blogger.vim","blogger.rb"]
 
 task :zip do
   print "version: "
@@ -21,7 +21,6 @@ end
 task :install do
   Dir.mkdir METARW_PATH unless File.exist? METARW_PATH
   FileUtils.cp_r BLOGGER_FILES, METARW_PATH
-  File.chmod 0755, "#{METARW_PATH}/html2text"
   puts "blogger.vim successfully installed."
   puts "And then add the following to your .vimrc:"
   puts "    let g:blogger_blogid = 'your_blogid_here'"

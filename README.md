@@ -15,8 +15,7 @@ Tatsuhiro UJIHISA <http://ujihisa.blogspot.com/>
 * ruby 1.9.1+
   * (gem) nokogiri 1.2.3+
   * (gem) rpeg-markdown 1.4.4+
-* python 2.5.1+
-  * html2text.py 2.35+
+* pandoc 1.2+
 
 ## How to use
 
@@ -27,8 +26,6 @@ After the install of metarw, do them:
 
     $ cp blogger.vim ~/.vim/autoload/metarw/
     $ cp blogger.rb ~/.vim/autoload/metarw/
-    $ cp html2text ~/.vim/autoload/metarw/
-    $ chmod +x ~/.vim/autoload/metarw/html2text
 
 And then add the following to your .vimrc:
 
@@ -117,12 +114,6 @@ All specs must be success or pending.
 Implement them:
 
 * Write document (~/.vim/doc/blogger.txt)
-* Remove python and html2text. Blogger.vim should not need both ruby and python.
 * Multiblogalization (Now blogger.vim can control only one blog with a vimrc)
-
-### Known bugs
-
-* html2text of python cannot handle multi-byte characters
-* html2text does not neccessarily decode markdown. (e.g. continuous <li>s)
 
 # vim: filetype=mkd

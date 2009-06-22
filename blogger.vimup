@@ -7,6 +7,10 @@
 "detailed_description": "See http://github.com/ujihisa/blogger.vim/tree/master"
 "install_details":
 "versions":
+  - '1.3': |
+      * [Feature] Copy the new blog post URI into clipboard automaticaly in OS X
+      * [Feature] Switch to use pandoc from html2text
+      * [Bugfix] All bugs by html2text was solved
   - '1.2': |
       * [Feature] Automatically rename the fakepath after creating a blog post.
       * [Bugfix] Enabled to post with Inline HTML

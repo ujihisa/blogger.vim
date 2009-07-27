@@ -86,9 +86,19 @@ module Blogger
     title = lines.shift.strip
     body = Markdown.new(lines.join).to_html
 
-    xml = Net::HTTP.get(URI.parse("http://www.blogger.com/feeds/#{blogid}/posts/default")) # not dry!
-    xml = Nokogiri::XML(xml)
-    put_uri = xml.at("//xmlns:entry[xmlns:link/@href='#{uri}']/xmlns:link[@rel='edit']")['href']
+    n = 0
+    xml, put_uri = nil, nil
+    loop do
+      xml = Net::HTTP.get(URI.parse(
+        "http://www.blogger.com/feeds/#{blogid}/posts/default?max-results=30&start-index=#{30*n+1}")) # not dry!
+      xml = Nokogiri::XML(xml)
+      break if xml.xpath('//xmlns:entry').to_a == []
+      put_uri = xml.at("//xmlns:entry[xmlns:link/@href='#{uri}']/xmlns:link[@rel='edit']")
+      break if put_uri
+      n += 1
+    end
+    put_uri = put_uri['href']
+
     xml.at("//xmlns:entry[xmlns:link/@href='#{uri}']/xmlns:title").content = title
     xml.at("//xmlns:entry[xmlns:link/@href='#{uri}']/xmlns:content").content = body
     xml.at("//xmlns:entry[xmlns:link/@href='#{uri}']")['xmlns'] = 'http://www.w3.org/2005/Atom'

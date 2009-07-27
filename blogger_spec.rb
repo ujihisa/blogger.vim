@@ -108,6 +108,13 @@ describe Blogger do
       Blogger.update(@blogid, uri, token, "hi updated\n\nupdated\n#{rand}\n\nyay!")
       Blogger.show(@blogid, uri).should match(/updated/)
     end
+
+    it 'updates an old entry' do
+      uri = 'http://wwwwwwwwwwwwwwwwwwzw3.blogspot.com/2009/05/hi_3099.html'
+      token = Blogger.login(@email, @pass)
+      Blogger.update(@blogid, uri, token, "hi updated\n\nupdated\n#{rand}\n\nyay!")
+      Blogger.show(@blogid, uri).should match(/updated/)
+    end
   end
 
   describe '.text2xml' do

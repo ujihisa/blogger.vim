@@ -86,18 +86,7 @@ module Blogger
     title = lines.shift.strip
     body = Markdown.new(lines.join).to_html
 
-    n = 0
-    xml, put_uri = nil, nil
-    loop do
-      xml = Net::HTTP.get(URI.parse(
-        "http://www.blogger.com/feeds/#{blogid}/posts/default?max-results=30&start-index=#{30*n+1}")) # not dry!
-      xml = Nokogiri::XML(xml)
-      break if xml.xpath('//xmlns:entry').to_a == []
-      put_uri = xml.at("//xmlns:entry[xmlns:link/@href='#{uri}']/xmlns:link[@rel='edit']")
-      break if put_uri
-      n += 1
-    end
-    put_uri = put_uri['href']
+    xml, put_uri = __cool__(blogid, uri)
 
     xml.at("//xmlns:entry[xmlns:link/@href='#{uri}']/xmlns:title").content = title
     xml.at("//xmlns:entry[xmlns:link/@href='#{uri}']/xmlns:content").content = body
@@ -109,6 +98,20 @@ module Blogger
         "Authorization" => "GoogleLogin auth=#{token}",
         'Content-Type' => 'application/atom+xml'
       })
+  end
+
+  def self.__cool__(blogid, uri)
+    xml = nil
+    put_uri = (0..1/0.0).each do |n|
+      xml = Net::HTTP.get(URI.parse(
+        "http://www.blogger.com/feeds/#{blogid}/posts/default?max-results=30&start-index=#{30*n+1}")) # not dry!
+      xml = Nokogiri::XML(xml)
+      break nil if xml.xpath('//xmlns:entry').empty?
+      put_uri = xml.at("//xmlns:entry[xmlns:link/@href='#{uri}']/xmlns:link[@rel='edit']")
+      break put_uri if put_uri
+    end
+    put_uri = put_uri['href']
+    [xml, put_uri]
   end
 
   # text2xml :: String -> String

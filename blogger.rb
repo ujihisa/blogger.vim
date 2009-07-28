@@ -48,8 +48,12 @@ module Blogger
 
   # show :: String -> String -> IO [String]
   def self.show(blogid, uri)
-    entry = list(blogid, 0).find {|e| e[:uri] == uri }
-    entry[:title] + "\n\n" + html2text(entry[:content])
+    xml = __cool__(blogid) {|x|
+      x.at("//xmlns:entry[xmlns:link/@href='#{uri}']/xmlns:link[@rel='edit']")
+    }
+    title = xml.at("//xmlns:entry[xmlns:link/@href='#{uri}']/xmlns:title").content
+    body = xml.at("//xmlns:entry[xmlns:link/@href='#{uri}']/xmlns:content").content
+    title + "\n\n" + html2text(body)
   end
 
   # login :: String -> String -> String

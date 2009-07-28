@@ -36,17 +36,9 @@ module Blogger
   class RateLimitException < Exception; end
   class EmptyEntry < Exception; end
 
-  def self.hi(blogid, page)
-    xml = Net::HTTP.get(URI.parse(
-      "http://www.blogger.com/feeds/#{blogid}/posts/default?max-results=30&start-index=#{30*page+1}"))
-    xml = Nokogiri::XML(xml)
-    raise EmptyEntry if xml.xpath('//xmlns:entry').empty?
-    xml
-  end
-
   # list :: String -> Int -> IO [Hash]
   def self.list(blogid, page)
-    hi(blogid, page).xpath('//xmlns:entry[xmlns:link/@rel="alternate"]').
+    __pagenate_get__(blogid, page).xpath('//xmlns:entry[xmlns:link/@rel="alternate"]').
       map {|i|
         [:published, :updated, :title, :content].
           maph {|s| [s, i.at(s.to_s).content] }.
@@ -114,9 +106,17 @@ module Blogger
   def self.__cool__(blogid)
     xml = nil
     (0..1/0.0).each do |n|
-      xml = hi(blogid, n)
+      xml = __pagenate_get__(blogid, n)
       break if yield(xml)
     end
+    xml
+  end
+
+  def self.__pagenate_get__(blogid, page)
+    xml = Net::HTTP.get(URI.parse(
+      "http://www.blogger.com/feeds/#{blogid}/posts/default?max-results=30&start-index=#{30*page+1}"))
+    xml = Nokogiri::XML(xml)
+    raise EmptyEntry if xml.xpath('//xmlns:entry').empty?
     xml
   end
 

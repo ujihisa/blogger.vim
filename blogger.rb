@@ -157,7 +157,7 @@ end
 if __FILE__ == $0
   case ARGV.shift
   when 'list'
-    puts Blogger.list(ARGV[0], 0).map {|e| "#{e[:title]} -- #{e[:uri]}" }
+    puts (Blogger.list(ARGV[0], 0) + Blogger.list(ARGV[0], 1)).map {|e| "#{e[:title]} -- #{e[:uri]}" }
   when 'show'
     puts Blogger.show(ARGV[0], ARGV[1])
   when 'create'

@@ -7,6 +7,8 @@
 "detailed_description": "See http://github.com/ujihisa/blogger.vim/tree/master"
 "install_details":
 "versions":
+  - '1.5': |
+      * [Feature] Longer blogger:list
   - '1.4': |
       * [Bugfix] Enable to handle an old entry in show and update
       * [Bugfix] Remove the last image which is automatically added by blogger web service

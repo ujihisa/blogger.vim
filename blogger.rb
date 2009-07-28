@@ -53,6 +53,7 @@ module Blogger
     }
     title = xml.at("//xmlns:entry[xmlns:link/@href='#{uri}']/xmlns:title").content
     body = xml.at("//xmlns:entry[xmlns:link/@href='#{uri}']/xmlns:content").content
+    body = body.gsub(%r|<div class="blogger-post-footer">.*?</div>|, '')
     title + "\n\n" + html2text(body)
   end
 

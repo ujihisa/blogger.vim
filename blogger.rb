@@ -34,11 +34,15 @@ end
 
 module Blogger
   class RateLimitException < Exception; end
+  class EmptyEntry < Exception; end
 
-  # list :: String -> IO [Hash]
-  def self.list(blogid)
-    xml = Net::HTTP.get(URI.parse("http://www.blogger.com/feeds/#{blogid}/posts/default"))
-    Nokogiri::XML(xml).xpath('//xmlns:entry[xmlns:link/@rel="alternate"]').
+  # list :: String -> Int -> IO [Hash]
+  def self.list(blogid, page)
+    xml = Net::HTTP.get(URI.parse(
+      "http://www.blogger.com/feeds/#{blogid}/posts/default?max-results=30&start-index=#{30*page+1}"))
+    xml = Nokogiri::XML(xml)
+    raise EmptyEntry if xml.xpath('//xmlns:entry').empty?
+    xml.xpath('//xmlns:entry[xmlns:link/@rel="alternate"]').
       map {|i|
         [:published, :updated, :title, :content].
           maph {|s| [s, i.at(s.to_s).content] }.
@@ -48,7 +52,7 @@ module Blogger
 
   # show :: String -> String -> IO [String]
   def self.show(blogid, uri)
-    entry = list(blogid).find {|e| e[:uri] == uri }
+    entry = list(blogid, 0).find {|e| e[:uri] == uri }
     entry[:title] + "\n\n" + html2text(entry[:content])
   end
 
@@ -146,7 +150,7 @@ end
 if __FILE__ == $0
   case ARGV.shift
   when 'list'
-    puts Blogger.list(ARGV[0]).map {|e| "#{e[:title]} -- #{e[:uri]}" }
+    puts Blogger.list(ARGV[0], 0).map {|e| "#{e[:title]} -- #{e[:uri]}" }
   when 'show'
     puts Blogger.show(ARGV[0], ARGV[1])
   when 'create'

@@ -1,5 +1,5 @@
 " metarw scheme: blogger
-" Version: 1.5
+" Version: 1.6
 " Copyright (C) 2009 ujihisa <http://ujihisa.blogspot.com/>
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining

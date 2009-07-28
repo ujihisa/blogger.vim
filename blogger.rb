@@ -48,7 +48,7 @@ module Blogger
 
   # show :: String -> String -> IO [String]
   def self.show(blogid, uri)
-    xml = __cool__(blogid) {|x|
+    xml = __find_xml_recursively__(blogid) {|x|
       x.at("//xmlns:entry[xmlns:link/@href='#{uri}']/xmlns:link[@rel='edit']")
     }
     title = xml.at("//xmlns:entry[xmlns:link/@href='#{uri}']/xmlns:title").content
@@ -90,7 +90,7 @@ module Blogger
     title = lines.shift.strip
     body = Markdown.new(lines.join).to_html
 
-    xml = __cool__(blogid) {|x|
+    xml = __find_xml_recursively__(blogid) {|x|
       x.at("//xmlns:entry[xmlns:link/@href='#{uri}']/xmlns:link[@rel='edit']")
     }
     put_uri = xml.at("//xmlns:entry[xmlns:link/@href='#{uri}']/xmlns:link[@rel='edit']")['href']
@@ -107,7 +107,7 @@ module Blogger
       })
   end
 
-  def self.__cool__(blogid)
+  def self.__find_xml_recursively__(blogid)
     xml = nil
     (0..1/0.0).each do |n|
       xml = __pagenate_get__(blogid, n)

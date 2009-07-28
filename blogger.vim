@@ -69,6 +69,7 @@ endfunction
 function! metarw#blogger#read(fakepath)  "{{{2
   let _ = s:parse_incomplete_fakepath(a:fakepath)
   if _.method == 'show'
+    setfiletype mkd
     return ['read', printf('!%s show %s %s', s:blogger_rb_command, g:blogger_blogid, _.uri)]
   elseif _.method == 'list'
     let s:browse = []

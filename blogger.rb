@@ -36,13 +36,17 @@ module Blogger
   class RateLimitException < Exception; end
   class EmptyEntry < Exception; end
 
-  # list :: String -> Int -> IO [Hash]
-  def self.list(blogid, page)
+  def self.hi(blogid, page)
     xml = Net::HTTP.get(URI.parse(
       "http://www.blogger.com/feeds/#{blogid}/posts/default?max-results=30&start-index=#{30*page+1}"))
     xml = Nokogiri::XML(xml)
     raise EmptyEntry if xml.xpath('//xmlns:entry').empty?
-    xml.xpath('//xmlns:entry[xmlns:link/@rel="alternate"]').
+    xml
+  end
+
+  # list :: String -> Int -> IO [Hash]
+  def self.list(blogid, page)
+    hi(blogid, page).xpath('//xmlns:entry[xmlns:link/@rel="alternate"]').
       map {|i|
         [:published, :updated, :title, :content].
           maph {|s| [s, i.at(s.to_s).content] }.
@@ -107,10 +111,7 @@ module Blogger
   def self.__cool__(blogid, uri)
     xml = nil
     put_uri = (0..1/0.0).each do |n|
-      xml = Net::HTTP.get(URI.parse(
-        "http://www.blogger.com/feeds/#{blogid}/posts/default?max-results=30&start-index=#{30*n+1}")) # not dry!
-      xml = Nokogiri::XML(xml)
-      break nil if xml.xpath('//xmlns:entry').empty?
+      xml = hi(blogid, n)
       put_uri = xml.at("//xmlns:entry[xmlns:link/@href='#{uri}']/xmlns:link[@rel='edit']")
       break put_uri if put_uri
     end

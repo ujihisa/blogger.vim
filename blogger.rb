@@ -94,7 +94,10 @@ module Blogger
     title = lines.shift.strip
     body = Markdown.new(lines.join).to_html
 
-    xml, put_uri = __cool__(blogid, uri)
+    xml = __cool__(blogid) {|x|
+      x.at("//xmlns:entry[xmlns:link/@href='#{uri}']/xmlns:link[@rel='edit']")
+    }
+    put_uri = xml.at("//xmlns:entry[xmlns:link/@href='#{uri}']/xmlns:link[@rel='edit']")['href']
 
     xml.at("//xmlns:entry[xmlns:link/@href='#{uri}']/xmlns:title").content = title
     xml.at("//xmlns:entry[xmlns:link/@href='#{uri}']/xmlns:content").content = body
@@ -108,15 +111,13 @@ module Blogger
       })
   end
 
-  def self.__cool__(blogid, uri)
+  def self.__cool__(blogid)
     xml = nil
-    put_uri = (0..1/0.0).each do |n|
+    (0..1/0.0).each do |n|
       xml = hi(blogid, n)
-      put_uri = xml.at("//xmlns:entry[xmlns:link/@href='#{uri}']/xmlns:link[@rel='edit']")
-      break put_uri if put_uri
+      break if yield(xml)
     end
-    put_uri = put_uri['href']
-    [xml, put_uri]
+    xml
   end
 
   # text2xml :: String -> String

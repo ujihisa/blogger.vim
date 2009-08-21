@@ -90,6 +90,16 @@ describe Blogger do
     end
   end
 
+  describe '.__firstline2title__' do
+    it 'ignores head hashes with spaces' do
+      Blogger.__firstline2title__("aaa").should == 'aaa'
+      Blogger.__firstline2title__("#aaa").should == 'aaa'
+      Blogger.__firstline2title__("##aaa").should == 'aaa'
+      Blogger.__firstline2title__("# aaa").should == 'aaa'
+      Blogger.__firstline2title__("#  aaa").should == 'aaa'
+    end
+  end
+
   describe '.text2xml' do
     it 'translate the argument text to xml' do
       xml = Blogger.text2xml(@new_entry_str)

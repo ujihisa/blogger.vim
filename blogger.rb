@@ -106,6 +106,11 @@ module Blogger
     xml
   end
 
+  # __firstline2title__ :: String -> String
+  def self.__firstline2title__(firstline)
+    firstline.gsub(/^#*\s*/, '')
+  end
+
   # text2xml :: String -> String
   def self.text2xml(text)
     lines = text.lines.to_a

@@ -9,6 +9,7 @@
 "versions":
   - '1.6': |
       * [Feature] Uses gem net-https-wrapper
+      * [Feature] Ignores Hashes and Spaces before the title
   - '1.5': |
       * [Feature] Longer blogger:list
   - '1.4': |

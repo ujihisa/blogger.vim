@@ -69,7 +69,7 @@ module Blogger
   # update :: String -> String -> String -> String -> IO ()
   def self.update(blogid, uri, token, str)
     lines = str.lines.to_a
-    title = lines.shift.strip
+    title = __firstline2title__(lines.shift.strip)
     body = Markdown.new(lines.join).to_html
 
     xml = __find_xml_recursively__(blogid) {|x|
@@ -114,7 +114,7 @@ module Blogger
   # text2xml :: String -> String
   def self.text2xml(text)
     lines = text.lines.to_a
-    title = lines.shift.strip
+    title = __firstline2title__(lines.shift.strip)
     body = Markdown.new(lines.join).to_html
     # body = body.gsub('&amp;', '&').gsub('&', '&amp;') # For inline HTML Syntax
     <<-EOF.gsub(/^\s*\|/, '')

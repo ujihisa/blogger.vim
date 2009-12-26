@@ -116,4 +116,4 @@ Implement them:
 * Write document (~/.vim/doc/blogger.txt)
 * Multiblogalization (Now blogger.vim can control only one blog with a vimrc)
 
-# vim: filetype=mkd
+# vim: filetype=markdown

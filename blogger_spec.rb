@@ -35,8 +35,8 @@ describe Blogger do
       entry = entries.first
       entry.should be_instance_of(Hash)
       entry[:uri].should match(/^http:/)
-      entry[:published].should match(/2009/)
-      entry[:updated].should match(/2009/)
+      entry[:published].should match(/2010/)
+      entry[:updated].should match(/2010/)
       entry[:title].should match(/hi/)
       entry[:content].should match(/yay!/)
     end
@@ -62,7 +62,7 @@ describe Blogger do
     it 'gets token' do
       a = Blogger.login(@email, @pass)
       a.should be_instance_of(String)
-      a.size.should == 160
+      a.size.should == 182
     end
   end
 

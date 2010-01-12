@@ -100,6 +100,13 @@ describe Blogger do
     end
   end
 
+  describe '.__title2firstline__' do
+    it 'adds hash on the first, and escaped the title' do
+      Blogger.__title2firstline__("aaa").should == '# aaa'
+      Blogger.__title2firstline__("a#aa").should == '# a\#aa'
+    end
+  end
+
   describe '.text2xml' do
     it 'translate the argument text to xml' do
       xml = Blogger.text2xml(@new_entry_str)

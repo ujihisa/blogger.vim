@@ -35,7 +35,7 @@ module Blogger
     title = xml.at("//xmlns:entry[xmlns:link/@href='#{uri}']/xmlns:title").content
     body = xml.at("//xmlns:entry[xmlns:link/@href='#{uri}']/xmlns:content").content
     body = body.gsub(%r|<div class="blogger-post-footer">.*?</div>|, '')
-    title + "\n\n" + html2text(body)
+    __title2firstline__(title) + "\n\n" + html2text(body)
   end
 
   # login :: String -> String -> String
@@ -109,6 +109,11 @@ module Blogger
   # __firstline2title__ :: String -> String
   def self.__firstline2title__(firstline)
     firstline.gsub(/^#*\s*/, '')
+  end
+
+  # __title2firstline__ :: String -> String
+  def self.__title2firstline__(title)
+    '# ' << title.gsub(/#/, '\#')
   end
 
   # text2xml :: String -> String

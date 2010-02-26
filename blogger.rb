@@ -5,6 +5,7 @@ require 'rubygems'
 require 'nokogiri'
 require 'markdown'
 require 'net-https-wrapper'
+require 'open-uri'
 
 class Array
   # maph :: [a] -> (a -> b) -> Hash
@@ -13,9 +14,75 @@ class Array
   end
 end
 
+class Gist
+  def self.create(text,description=nil)
+    a = self.new
+    a.instance_variable_set("@text",text)
+    r = Net::HTTP.post_form(URI.parse('http://gist.github.com/gists'),{'file_contents[gistfile1]' => text,'file_name[gistfile1]' => nil, 'file_ext[gistfile1]' => '.txt'}.merge(self.auth))
+    a.instance_variable_set("@url",r['Location'])
+    a.instance_variable_set("@gist_id",URI.parse(a.url).path.gsub(/^\//,''))
+    a.set_description description unless description.nil?
+    a
+  end
+
+  def self.load(id)
+    self.new(id)
+  end
+
+  def set_description(desc)
+    p Net::HTTP.post_form(URI.parse('http://gist.github.com/gists/'+@gist_id+'/update_description'),{'description' => desc}.merge(self.class.auth))
+    self
+  end
+
+  def url
+    @url
+  end
+
+  def initialize(gist_id=nil)
+    raise ArgumentError, 'gist_id is not vaild id' if gist_id.to_i.zero? && !gist_id.nil?
+    if gist_id
+      @url  = "http://gist.github.com/#{gist_id.to_s}"
+      @text = open("#{@url}.txt").read
+      @gist_id = gist_id.to_s
+    end
+  end
+
+  def embed
+    '<script src="http://gist.github.com/'+@gist_id+'.js?file=gistfile1.txt"></script>'
+  end
+
+  def text
+    @text
+  end
+
+  def text=(x)
+    @text = x
+  end
+
+  def gist_id
+    @gist_id
+  end
+
+  def update
+   Net::HTTP.post_form(URI.parse('http://gist.github.com/gists/'+@gist_id),{'file_contents[gistfile1.txt]' => @text,'file_ext[gistfile1.txt]' => '.txt','file_name[gistfile1.txt]' => '', '_method' => 'put'}.merge(self.class.auth))
+   self
+  end
+
+  def self.auth
+    user  = `git config --global github.user`.strip
+    token = `git config --global github.token`.strip
+ 
+    user.empty? ? {} : { :login => user, :token => token }
+  end
+end
+
 module Blogger
   class RateLimitException < Exception; end
   class EmptyEntry < Exception; end
+
+  @@gist = false
+  def self.gist; @@gist; end
+  def self.gist=(x); @@gist = x; end
 
   # list :: String -> Int -> IO [Hash]
   def self.list(blogid, page)
@@ -146,6 +213,11 @@ module Blogger
 end
 
 if __FILE__ == $0
+  if ARGV[0] == '--gist'
+    Blogger.gist = true
+    ARGV.shift
+  end
+
   case ARGV.shift
   when 'list'
     puts (Blogger.list(ARGV[0], 0) + Blogger.list(ARGV[0], 1)).map {|e| "#{e[:title]} -- #{e[:uri]}" }

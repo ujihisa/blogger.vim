@@ -204,7 +204,7 @@ module Blogger
   # html2text :: String -> String
   def self.html2text(html)
     memo = []
-    IO.popen('html2markdown', 'r+') {|io|
+    IO.popen('pandoc --from=html --to=markdown', 'r+') {|io|
       io.puts html
       io.close_write
       io.read

@@ -26,7 +26,17 @@
 "   The following metarw#blogger#complete() is just the copy from metarw-git
 " script variables {{{2
 let s:blogger_rb_command = printf('ruby %s/blogger.rb', expand('<sfile>:p:h'))
+if !exists('g:blogger_gist')
+  let g:blogger_gist = 0
+endif
+
 function! metarw#blogger#complete(arglead, cmdline, cursorpos)  "{{{2
+  if g:blogger_gist == 1
+    let s:blogger_rb_gist = " --gist"
+  else
+    let s:blogger_rb_gist = ""
+  endif
+
   " a:arglead always contains "blogger:".
   let _ = s:parse_incomplete_fakepath(a:arglead)
 
@@ -67,13 +77,19 @@ endfunction
 
 
 function! metarw#blogger#read(fakepath)  "{{{2
+  if g:blogger_gist == 1
+    let s:blogger_rb_gist = " --gist"
+  else
+    let s:blogger_rb_gist = ""
+  endif
+
   let _ = s:parse_incomplete_fakepath(a:fakepath)
   if _.method == 'show'
     setfiletype markdown
-    return ['read', printf('!%s show %s %s', s:blogger_rb_command, g:blogger_blogid, _.uri)]
+    return ['read', printf('!%s%s show %s %s', s:blogger_rb_command,s:blogger_rb_gist, g:blogger_blogid, _.uri)]
   elseif _.method == 'list'
     let s:browse = []
-    for entry in split(system(printf('%s list %s', s:blogger_rb_command, g:blogger_blogid)), "\n")
+    for entry in split(system(printf('%s%s list %s', s:blogger_rb_command,s:blogger_rb_gist, g:blogger_blogid)), "\n")
       let uri = split(entry, " -- ")[-1]
       let s:browse = add(s:browse, {
       \  'label': entry,
@@ -90,14 +106,21 @@ endfunction
 
 
 function! metarw#blogger#write(fakepath, line1, line2, append_p)  "{{{2
+  if g:blogger_gist == 1
+    let s:blogger_rb_gist = " --gist"
+  else
+    let s:blogger_rb_gist = ""
+  endif
+
   let _ = s:parse_incomplete_fakepath(a:fakepath)
   if _.method == 'show'
-    return ['write', printf('!%s update %s %s %s %s', s:blogger_rb_command, g:blogger_blogid, _.uri, g:blogger_email, g:blogger_pass)]
+    return ['write', printf('!%s%s update %s %s %s %s', s:blogger_rb_command, s:blogger_rb_gist, g:blogger_blogid, _.uri, g:blogger_email, g:blogger_pass)]
   elseif _.method == 'create'
     let v = '"' . tempname() . '"'
     return ['write',
-    \       printf('!%s create %s %s %s > %s',
+    \       printf('!%s%s create %s %s %s > %s',
     \              s:blogger_rb_command,
+    \              s:blogger_rb_gist,
     \              g:blogger_blogid,
     \              g:blogger_email,
     \              g:blogger_pass,

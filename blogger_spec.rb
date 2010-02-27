@@ -118,6 +118,7 @@ describe Blogger do
 
   describe '.html2text' do
     it 'encodes html to markdown style text' do
+      Blogger.gist = false
       html = <<-EOF.gsub(/^\s+\|/, '')
       |<p>It's sunny today.
       |yay!</p>
@@ -132,6 +133,7 @@ describe Blogger do
       |
       |hehehe
       |</code></pre>
+      |<script src="http://gist.github.com/315556.js?file=gistfile1.txt"></script>
       EOF
       text = <<-EOF.gsub(/^\s+\|/, '')
       |It's sunny today. yay!
@@ -144,10 +146,45 @@ describe Blogger do
       |    
       |    hehehe
       |
+      |<script src="http://gist.github.com/315556.js?file=gistfile1.txt"></script>
+      EOF
+      Blogger.gist = true
+      html = <<-EOF.gsub(/^\s+\|/, '')
+      |<p>It's sunny today.
+      |yay!</p>
+
+      |<ul>
+      |<li>item1</li>
+      |<li>item2</li>
+      |</ul>
+      |<pre><code>
+      |this is
+      |a pen
       |
+      |hehehe
+      |</code></pre>
+      |<script src="http://gist.github.com/315556.js?file=gistfile1.txt"></script>
+      EOF
+      text = <<-EOF.gsub(/^\s+\|/, '')
+      |It's sunny today. yay!
+      |
+      |-   item1
+      |-   item2
+      |
+      |    this is
+      |    a pen
+      |    
+      |    hehehe
+      |
+      |<gist options="315556 txt" />
+      |    a
       |
       EOF
+      Blogger.gist = false
       Blogger.html2text(html).should == text
     end
+  end
+
+  describe '.text2html' do
   end
 end

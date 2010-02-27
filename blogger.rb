@@ -15,13 +15,17 @@ class Array
 end
 
 class Gist
-  def self.create(text,description=nil)
+  class GistFileOneNotFound < Exception;end
+  class GistNotFound < Exception; end
+  def self.create(o={})
+    opt = {:text => '',:description => nil, :ext => 'txt'}.merge(o)
     a = self.new
-    a.instance_variable_set("@text",text)
-    r = Net::HTTP.post_form(URI.parse('http://gist.github.com/gists'),{'file_contents[gistfile1]' => text,'file_name[gistfile1]' => nil, 'file_ext[gistfile1]' => '.txt'}.merge(self.auth))
+    a.instance_variable_set("@text",opt[:text])
+    r = Net::HTTP.post_form(URI.parse('http://gist.github.com/gists'),{'file_contents[gistfile1]' => opt[:text],'file_name[gistfile1]' => nil, 'file_ext[gistfile1]' => ".#{opt[:ext]}"}.merge(self.auth))
     a.instance_variable_set("@url",r['Location'])
+    a.instance_variable_set("@ext",opt[:ext])
     a.instance_variable_set("@gist_id",URI.parse(a.url).path.gsub(/^\//,''))
-    a.set_description description unless description.nil?
+    a.set_description opt[:description] unless opt[:description].nil?
     a
   end
 
@@ -30,7 +34,7 @@ class Gist
   end
 
   def set_description(desc)
-    p Net::HTTP.post_form(URI.parse('http://gist.github.com/gists/'+@gist_id+'/update_description'),{'description' => desc}.merge(self.class.auth))
+    Net::HTTP.post_form(URI.parse('http://gist.github.com/gists/'+@gist_id+'/update_description'),{'description' => desc}.merge(self.class.auth))
     self
   end
 
@@ -41,14 +45,25 @@ class Gist
   def initialize(gist_id=nil)
     raise ArgumentError, 'gist_id is not vaild id' if gist_id.to_i.zero? && !gist_id.nil?
     if gist_id
-      @url  = "http://gist.github.com/#{gist_id.to_s}"
-      @text = open("#{@url}.txt").read
-      @gist_id = gist_id.to_s
+      @url     = "http://gist.github.com/#{gist_id.to_s}"
+      @text    = open("#{@url}.txt").read
+      begin
+        open("#{@url}.js").read
+      rescue OpenURI::HTTPError
+        raise Gist::GistNotFound
+      end
+      @ext     = open(@url).read.gsub(/.+http:\/\/gist\.github\.com\/#{gist_id.to_s}\.js\?file=gistfile1\.([a-zA-Z0-9]+).+/m) { $1 }
+        raise Gist::GistFileOneNotFound if @ext =~ /^<!DOCTYPE/
+        @gist_id = gist_id.to_s
     end
   end
 
+  def ext
+    @ext
+  end
+
   def embed
-    '<script src="http://gist.github.com/'+@gist_id+'.js?file=gistfile1.txt"></script>'
+    '<script src="http://gist.github.com/'+@gist_id+'.js?file=gistfile1.'+ext+'"></script>'
   end
 
   def text
@@ -63,15 +78,17 @@ class Gist
     @gist_id
   end
 
-  def update
-   Net::HTTP.post_form(URI.parse('http://gist.github.com/gists/'+@gist_id),{'file_contents[gistfile1.txt]' => @text,'file_ext[gistfile1.txt]' => '.txt','file_name[gistfile1.txt]' => '', '_method' => 'put'}.merge(self.class.auth))
-   self
+  def updatable?
+    update(nil,open("#{@url}.txt").read,false)['Location'] != 'http://gist.github.com/gists'
+  end
+
+  def update(new_ext=nil,new_text=nil,return_self=true)
+    !return_self ? Net::HTTP.post_form(URI.parse("http://gist.github.com/gists/"+@gist_id),{"file_contents[gistfile1.#{@ext}]" => new_text.nil? ? @text : new_text,"file_ext[gistfile1.#{@ext}]" => (@ext != new_ext && !new_ext.nil?) ? ".#{new_ext}" : ".#{@ext}","file_name[gistfile1.#{ext}]" => "", "_method" => "put"}.merge(self.class.auth)) : self
   end
 
   def self.auth
     user  = `git config --global github.user`.strip
     token = `git config --global github.token`.strip
- 
     user.empty? ? {} : { :login => user, :token => token }
   end
 end
@@ -88,10 +105,10 @@ module Blogger
   def self.list(blogid, page)
     __pagenate_get__(blogid, page).xpath('//xmlns:entry[xmlns:link/@rel="alternate"]').
       map {|i|
-        [:published, :updated, :title, :content].
-          maph {|s| [s, i.at(s.to_s).content] }.
-          update(:uri => i.at('link[@rel="alternate"]')['href'])
-      }
+      [:published, :updated, :title, :content].
+        maph {|s| [s, i.at(s.to_s).content] }.
+        update(:uri => i.at('link[@rel="alternate"]')['href'])
+    }
   end
 
   # show :: String -> String -> IO [String]
@@ -115,8 +132,8 @@ module Blogger
         'service' => 'blogger',
         'accountType' => 'HOSTED_OR_GOOGLE',
         'source' => 'ujihisa-bloggervim-1'
-      }.map {|i, j| "#{i}=#{j}" }.join('&'),
-      {'Content-Type' => 'application/x-www-form-urlencoded'})
+    }.map {|i, j| "#{i}=#{j}" }.join('&'),
+    {'Content-Type' => 'application/x-www-form-urlencoded'})
     a.body.lines.to_a.maph {|i| i.split('=') }['Auth'].chomp
   end
 
@@ -125,19 +142,19 @@ module Blogger
     xml = Net::HTTP.post(
       "http://www.blogger.com/feeds/#{blogid}/posts/default",
       text2xml(str),
-      {
+        {
         "Authorization" => "GoogleLogin auth=#{token}",
         'Content-Type' => 'application/atom+xml'
       })
-    raise RateLimitException if xml.body == "Blog has exceeded rate limit or otherwise requires word verification for new posts"
-    Nokogiri::XML(xml.body).at('//xmlns:link[@rel="alternate"]')['href']
+      raise RateLimitException if xml.body == "Blog has exceeded rate limit or otherwise requires word verification for new posts"
+      Nokogiri::XML(xml.body).at('//xmlns:link[@rel="alternate"]')['href']
   end
 
   # update :: String -> String -> String -> String -> IO ()
   def self.update(blogid, uri, token, str)
     lines = str.lines.to_a
     title = __firstline2title__(lines.shift.strip)
-    body = Markdown.new(lines.join).to_html
+    body = self.text2html(lines.join)
 
     xml = __find_xml_recursively__(blogid) {|x|
       x.at("//xmlns:entry[xmlns:link/@href='#{uri}']/xmlns:link[@rel='edit']")
@@ -153,7 +170,7 @@ module Blogger
       {
         "Authorization" => "GoogleLogin auth=#{token}",
         'Content-Type' => 'application/atom+xml'
-      })
+    })
   end
 
   def self.__find_xml_recursively__(blogid)
@@ -168,9 +185,9 @@ module Blogger
   def self.__pagenate_get__(blogid, page)
     xml = Net::HTTP.get(URI.parse(
       "http://www.blogger.com/feeds/#{blogid}/posts/default?max-results=30&start-index=#{30*page+1}"))
-    xml = Nokogiri::XML(xml)
-    raise EmptyEntry if xml.xpath('//xmlns:entry').empty?
-    xml
+      xml = Nokogiri::XML(xml)
+      raise EmptyEntry if xml.xpath('//xmlns:entry').empty?
+      xml
   end
 
   # __firstline2title__ :: String -> String
@@ -187,7 +204,7 @@ module Blogger
   def self.text2xml(text)
     lines = text.lines.to_a
     title = __firstline2title__(lines.shift.strip)
-    body = Markdown.new(lines.join).to_html
+    body = self.text2html(lines.join)
     # body = body.gsub('&amp;', '&').gsub('&', '&amp;') # For inline HTML Syntax
     <<-EOF.gsub(/^\s*\|/, '')
     |<entry xmlns='http://www.w3.org/2005/Atom'>
@@ -203,12 +220,61 @@ module Blogger
 
   # html2text :: String -> String
   def self.html2text(html)
-    memo = []
-    IO.popen('pandoc --from=html --to=markdown', 'r+') {|io|
-      io.puts html
+    r = IO.popen('pandoc --from=html --to=markdown', 'r+') {|io|
+      io.puts html.gsub(/<script (.+?)>/) { '%script '+$1+"%"}.gsub(/<\/script>/,'%/script%')
       io.close_write
-      io.read
+      io.read.gsub(/%script\n/,"%script ").gsub(/%script (.+?)%/) {'<script '+$1+'>'}.gsub(/%\/script%/,'</script>')
     }
+
+    #<script src=['"]http:\/\/gist.github.com\/([0-9]+)\.js\?file=gistfile1.([a-zA-Z0-9]+)['"] ?\/>
+    # expand gist if editable
+    r.gsub!(/<script src=['"]http:\/\/gist.github.com\/([0-9]+)\.js\?file=gistfile1.([a-zA-Z0-9]+)['"]><\/script>/) do |s|
+      if Blogger.gist
+        g  = Gist.new($1)
+        if g.updatable?
+          c  = '<gist options="'+$1+' '+$2+'" />'
+          c << "\n"
+          c << g.text.split(/\r?\n/).map{|x| '    '+x }.join("\n")
+          c << "\n"
+        else; s
+        end
+      else; s
+      end
+    end
+    r
+  end
+
+  def self.text2html(mkd)
+    text = Markdown.new(mkd).to_html
+    # update gist if editable.
+    text.gsub!(/<p><gist option="([0-9]+) ([a-zA-Z0-9]+)" ?\/><\/p>\n*<pre><code>(.+)<\/code><\/pre>/m) do
+      text = $3
+      begin
+        g = Gist.new($1)
+      rescue GistNotFound,GistFileOneNotFound
+        g = Gist.create(:text => text,:ext => $3,:description => "Blogger.vim #{Time.now}")
+        g.embed
+      else
+        if g.editable?
+          g.text = text
+          g.update($3).embed
+        else
+          g = Gist.create(:text => text,:ext => $3,:description => "Blogger.vim #{Time.now}")
+          g.embed
+        end
+      end
+    end
+    text.gsub!(/<pre><code>(.+?)<\/code><\/pre>/m) do |s|
+      text = $1
+      if Blogger.gist
+        if $1.split(/\r?\n/).size >= 5
+          g = Gist.create(:text => text,:description => "Blogger.vim #{Time.now}")
+          g.embed
+        else; s
+        end
+      else; s
+      end
+    end
   end
 end
 

@@ -164,13 +164,13 @@ module Blogger
     xml.at("//xmlns:entry[xmlns:link/@href='#{uri}']/xmlns:title").content = title
     xml.at("//xmlns:entry[xmlns:link/@href='#{uri}']/xmlns:content").content = body
     xml.at("//xmlns:entry[xmlns:link/@href='#{uri}']")['xmlns'] = 'http://www.w3.org/2005/Atom'
-    Net::HTTP.put(
+    Nokogiri::XML(Net::HTTP.put(
       put_uri,
       xml.at("//xmlns:entry[xmlns:link/@href='#{uri}']").to_s,
       {
         "Authorization" => "GoogleLogin auth=#{token}",
         'Content-Type' => 'application/atom+xml'
-    })
+    }).body).at('//xmlns:link[@rel="alternate"]')['href']
   end
 
   def self.__find_xml_recursively__(blogid)
@@ -286,7 +286,7 @@ if __FILE__ == $0
 
   case ARGV.shift
   when 'list'
-    puts (Blogger.list(ARGV[0], 0) + Blogger.list(ARGV[0], 1)).map {|e| "#{e[:title]} -- #{e[:uri]}" }
+    puts (Blogger.list(ARGV[0], 0) + (begin; Blogger.list(ARGV[0], 1); rescue Blogger::EmptyEntry; []; end)).map {|e| "#{e[:title]} -- #{e[:uri]}" }
   when 'show'
     puts Blogger.show(ARGV[0], ARGV[1])
   when 'create'

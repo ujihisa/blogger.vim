@@ -228,7 +228,7 @@ module Blogger
 
     #<script src=['"]http:\/\/gist.github.com\/([0-9]+)\.js\?file=gistfile1.([a-zA-Z0-9]+)['"] ?\/>
     # expand gist if editable
-    r.gsub!(/<script src=['"]http:\/\/gist.github.com\/([0-9]+)\.js\?file=gistfile1.([a-zA-Z0-9]+)['"]><\/script>/) do |s|
+    r.gsub!(/<script src=['"]http:\/\/gist.github.com\/([0-9]+)\.js\?file=gistfile1.([a-zA-Z0-9]+)['"](><\/script>| ?\/>)/) do |s|
       if Blogger.gist
         g  = Gist.new($1)
         if g.updatable?

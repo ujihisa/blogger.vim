@@ -17,6 +17,7 @@ end
 class Gist
   class GistFileOneNotFound < Exception;end
   class GistNotFound < Exception; end
+  class GitIsNotConfigured < Exception; end
   def self.create(o={})
     opt = {:text => '', :description => nil, :ext => 'txt'}.merge(o)
     a = self.new
@@ -107,7 +108,8 @@ class Gist
   def self.auth
     user  = `git config --global github.user`.strip
     token = `git config --global github.token`.strip
-    user.empty? ? {} : { :login => user, :token => token }
+    raise GitIsNotConfigured, 'Access to [GitHub\'s account settings](https://github.com/account), and click Global git config information. Then type `git config` lines to your shell.' if user.empty? || token.empty?
+    { :login => user, :token => token }
   end
 end
 
@@ -246,7 +248,7 @@ module Blogger
 
     #<script src=['"]http:\/\/gist.github.com\/([0-9]+)\.js\?file=gistfile1.([a-zA-Z0-9]+)['"] ?\/>
     # expand gist if editable
-    r.gsub!(/<script src=['"]http:\/\/gist.github.com\/([0-9]+)\.js\?file=gistfile1.([a-zA-Z0-9]+)['"]><\/script>/) do |s|
+    r.gsub!(/<script src=['"]http:\/\/gist.github.com\/([0-9]+)\.js\?file=gistfile1.([a-zA-Z0-9]+)['"](><\/script>| ?\/>)/) do |s|
       if Blogger.gist
         g  = Gist.new($1)
         if g.updatable?

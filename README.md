@@ -52,17 +52,19 @@ If an error came, try `:w!` instead.
 
 ### Put code to gist
 
-If you using git and github, you can put code to gist automatic.
+If you use git and github, you can put code to gist automatically.
 
-First, setup git. Access to [GitHub's account settings](https://github.com/account), and click **Global git config information**.
+First, setup git. Access [GitHub's account settings](https://github.com/account), and click "Global git config information".
 
-Then, type `git config` lines to your shell.
+Second, type `git config` on your shell.
 
-Last, add the following to your .vimrc:
+Then, add the following line into your `.vimrc`:
 
     let g:blogger_gist = 1
 
-Then write code like this:
+Now you finished all preparations. Then write code like this:
+
+    below is a sample code.
 
         a
         a
@@ -70,7 +72,7 @@ Then write code like this:
         a
         a
 
-blogger.rb automatic put code to gist if over 5 lines.
+`blogger.rb` automatically puts codes in your blog post to gist if the codes are more than 5 lines.
 
 ### FAQ
 

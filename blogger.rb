@@ -21,10 +21,17 @@ class Gist
     opt = {:text => '', :description => nil, :ext => 'txt'}.merge(o)
     a = self.new
     a.instance_variable_set("@text", opt[:text])
-    r = Net::HTTP.post_form(URI.parse('http://gist.github.com/gists'), {'file_contents[gistfile1]' => opt[:text], 'file_name[gistfile1]' => nil, 'file_ext[gistfile1]' => ".#{opt[:ext]}"}.merge(self.auth))
+    r = Net::HTTP.post_form(
+      URI.parse('http://gist.github.com/gists'),
+      {
+        'file_contents[gistfile1]' => opt[:text],
+        'file_name[gistfile1]' => nil,
+        'file_ext[gistfile1]' => ".#{opt[:ext]}"
+      }.merge(self.auth))
     a.instance_variable_set("@url", r['Location'])
     a.instance_variable_set("@ext", opt[:ext])
-    a.instance_variable_set("@gist_id", URI.parse(a.url).path.gsub(/^\//, ''))
+    a.instance_variable_set(
+      "@gist_id", URI.parse(a.url).path.gsub(/^\//, ''))
     a.set_description opt[:description] unless opt[:description].nil?
     a
   end
@@ -34,7 +41,9 @@ class Gist
   end
 
   def set_description(desc)
-    Net::HTTP.post_form(URI.parse('http://gist.github.com/gists/'+@gist_id+'/update_description'), {'description' => desc}.merge(self.class.auth))
+    Net::HTTP.post_form(
+      URI.parse('http://gist.github.com/gists/'+@gist_id+'/update_description'),
+      {'description' => desc}.merge(self.class.auth))
     self
   end
 
@@ -43,7 +52,8 @@ class Gist
   end
 
   def initialize(gist_id=nil)
-    raise ArgumentError, 'gist_id is not vaild id' if gist_id.to_i.zero? && !gist_id.nil?
+    raise ArgumentError, 'gist_id is not vaild id' if
+      gist_id.to_i.zero? && !gist_id.nil?
     if gist_id
       @url     = "http://gist.github.com/#{gist_id.to_s}"
       @text    = open("#{@url}.txt").read
@@ -52,9 +62,10 @@ class Gist
       rescue OpenURI::HTTPError
         raise Gist::GistNotFound
       end
-      @ext     = open(@url).read.gsub(/.+http:\/\/gist\.github\.com\/#{gist_id.to_s}\.js\?file=gistfile1\.([a-zA-Z0-9]+).+/m) { $1 }
-        raise Gist::GistFileOneNotFound if @ext =~ /^<!DOCTYPE/
-        @gist_id = gist_id.to_s
+      @ext = open(@url).read.
+        gsub(/.+http:\/\/gist\.github\.com\/#{gist_id.to_s}\.js\?file=gistfile1\.([a-zA-Z0-9]+).+/m) { $1 }
+      raise Gist::GistFileOneNotFound if @ext =~ /^<!DOCTYPE/
+      @gist_id = gist_id.to_s
     end
   end
 
@@ -63,7 +74,8 @@ class Gist
   end
 
   def embed
-    '<script src="http://gist.github.com/'+@gist_id+'.js?file=gistfile1.'+ext+'"></script>'
+    '<script src="http://gist.github.com/' + @gist_id +
+      '.js?file=gistfile1.' + ext + '"></script>'
   end
 
   def text
@@ -83,7 +95,14 @@ class Gist
   end
 
   def update(new_ext=nil, new_text=nil, return_self=true)
-    !return_self ? Net::HTTP.post_form(URI.parse("http://gist.github.com/gists/"+@gist_id), {"file_contents[gistfile1.#{@ext}]" => new_text.nil? ? @text : new_text, "file_ext[gistfile1.#{@ext}]" => (@ext != new_ext && !new_ext.nil?) ? ".#{new_ext}" : ".#{@ext}", "file_name[gistfile1.#{ext}]" => "", "_method" => "put"}.merge(self.class.auth)) : self
+    !return_self ? Net::HTTP.post_form(
+      URI.parse("http://gist.github.com/gists/"+@gist_id),
+      {
+        "file_contents[gistfile1.#{@ext}]" => new_text.nil? ? @text : new_text,
+        "file_ext[gistfile1.#{@ext}]" => (@ext != new_ext && !new_ext.nil?) ? ".#{new_ext}" : ".#{@ext}",
+        "file_name[gistfile1.#{ext}]" => "",
+        "_method" => "put"
+      }.merge(self.class.auth)) : self
   end
 
   def self.auth

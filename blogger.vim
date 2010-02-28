@@ -86,10 +86,10 @@ function! metarw#blogger#read(fakepath)  "{{{2
   let _ = s:parse_incomplete_fakepath(a:fakepath)
   if _.method == 'show'
     setfiletype markdown
-    return ['read', printf('!%s%s show %s %s', s:blogger_rb_command,s:blogger_rb_gist, g:blogger_blogid, _.uri)]
+    return ['read', printf('!%s%s show %s %s', s:blogger_rb_command, s:blogger_rb_gist, g:blogger_blogid, _.uri)]
   elseif _.method == 'list'
     let s:browse = []
-    for entry in split(system(printf('%s%s list %s', s:blogger_rb_command,s:blogger_rb_gist, g:blogger_blogid)), "\n")
+    for entry in split(system(printf('%s%s list %s', s:blogger_rb_command, s:blogger_rb_gist, g:blogger_blogid)), "\n")
       let uri = split(entry, " -- ")[-1]
       let s:browse = add(s:browse, {
       \  'label': entry,

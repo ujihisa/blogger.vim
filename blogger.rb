@@ -19,13 +19,20 @@ class Gist
   class GistNotFound < Exception; end
   class GitIsNotConfigured < Exception; end
   def self.create(o={})
-    opt = {:text => '',:description => nil, :ext => 'txt'}.merge(o)
+    opt = {:text => '', :description => nil, :ext => 'txt'}.merge(o)
     a = self.new
-    a.instance_variable_set("@text",opt[:text])
-    r = Net::HTTP.post_form(URI.parse('http://gist.github.com/gists'),{'file_contents[gistfile1]' => opt[:text],'file_name[gistfile1]' => nil, 'file_ext[gistfile1]' => ".#{opt[:ext]}"}.merge(self.auth))
-    a.instance_variable_set("@url",r['Location'])
-    a.instance_variable_set("@ext",opt[:ext])
-    a.instance_variable_set("@gist_id",URI.parse(a.url).path.gsub(/^\//,''))
+    a.instance_variable_set("@text", opt[:text])
+    r = Net::HTTP.post_form(
+      URI.parse('http://gist.github.com/gists'),
+      {
+        'file_contents[gistfile1]' => opt[:text],
+        'file_name[gistfile1]' => nil,
+        'file_ext[gistfile1]' => ".#{opt[:ext]}"
+      }.merge(self.auth))
+    a.instance_variable_set("@url", r['Location'])
+    a.instance_variable_set("@ext", opt[:ext])
+    a.instance_variable_set(
+      "@gist_id", URI.parse(a.url).path.gsub(/^\//, ''))
     a.set_description opt[:description] unless opt[:description].nil?
     a
   end
@@ -35,7 +42,9 @@ class Gist
   end
 
   def set_description(desc)
-    Net::HTTP.post_form(URI.parse('http://gist.github.com/gists/'+@gist_id+'/update_description'),{'description' => desc}.merge(self.class.auth))
+    Net::HTTP.post_form(
+      URI.parse('http://gist.github.com/gists/'+@gist_id+'/update_description'),
+      {'description' => desc}.merge(self.class.auth))
     self
   end
 
@@ -44,19 +53,20 @@ class Gist
   end
 
   def initialize(gist_id=nil)
-    raise ArgumentError, 'gist_id is not vaild id' if gist_id.to_i.zero? && !gist_id.nil?
-    if gist_id
-      @url     = "http://gist.github.com/#{gist_id.to_s}"
-      @text    = open("#{@url}.txt").read
-      begin
-        open("#{@url}.js").read
-      rescue OpenURI::HTTPError
-        raise Gist::GistNotFound
-      end
-      @ext     = open(@url).read.gsub(/.+http:\/\/gist\.github\.com\/#{gist_id.to_s}\.js\?file=gistfile1\.([a-zA-Z0-9]+).+/m) { $1 }
-        raise Gist::GistFileOneNotFound if @ext =~ /^<!DOCTYPE/
-        @gist_id = gist_id.to_s
+    raise ArgumentError, 'gist_id is not vaild id' if
+      gist_id.to_i.zero? && !gist_id.nil?
+    return unless gist_id
+    @url     = "http://gist.github.com/#{gist_id.to_s}"
+    @text    = open("#{@url}.txt").read
+    begin
+      open("#{@url}.js").read
+    rescue OpenURI::HTTPError
+      raise Gist::GistNotFound
     end
+    @ext = open(@url).read.
+      gsub(/.+http:\/\/gist\.github\.com\/#{gist_id.to_s}\.js\?file=gistfile1\.([a-zA-Z0-9]+).+/m) { $1 }
+    raise Gist::GistFileOneNotFound if @ext =~ /^<!DOCTYPE/
+    @gist_id = gist_id.to_s
   end
 
   def ext
@@ -64,7 +74,8 @@ class Gist
   end
 
   def embed
-    '<script src="http://gist.github.com/'+@gist_id+'.js?file=gistfile1.'+ext+'"></script>'
+    '<script src="http://gist.github.com/' + @gist_id +
+      '.js?file=gistfile1.' + ext + '"></script>'
   end
 
   def text
@@ -80,11 +91,18 @@ class Gist
   end
 
   def updatable?
-    update(nil,open("#{@url}.txt").read,false)['Location'] != 'http://gist.github.com/gists'
+    update(nil, open("#{@url}.txt").read, false)['Location'] != 'http://gist.github.com/gists'
   end
 
-  def update(new_ext=nil,new_text=nil,return_self=true)
-    !return_self ? Net::HTTP.post_form(URI.parse("http://gist.github.com/gists/"+@gist_id),{"file_contents[gistfile1.#{@ext}]" => new_text.nil? ? @text : new_text,"file_ext[gistfile1.#{@ext}]" => (@ext != new_ext && !new_ext.nil?) ? ".#{new_ext}" : ".#{@ext}","file_name[gistfile1.#{ext}]" => "", "_method" => "put"}.merge(self.class.auth)) : self
+  def update(new_ext=nil, new_text=nil, return_self=true)
+    !return_self ? Net::HTTP.post_form(
+      URI.parse("http://gist.github.com/gists/"+@gist_id),
+      {
+        "file_contents[gistfile1.#{@ext}]" => new_text.nil? ? @text : new_text,
+        "file_ext[gistfile1.#{@ext}]" => (@ext != new_ext && !new_ext.nil?) ? ".#{new_ext}" : ".#{@ext}",
+        "file_name[gistfile1.#{ext}]" => "",
+        "_method" => "put"
+      }.merge(self.class.auth)) : self
   end
 
   def self.auth
@@ -223,9 +241,9 @@ module Blogger
   # html2text :: String -> String
   def self.html2text(html)
     r = IO.popen('pandoc --from=html --to=markdown', 'r+') {|io|
-      io.puts html.gsub(/<script (.+?)>/) { '%script '+$1+"%"}.gsub(/<\/script>/,'%/script%')
+      io.puts html.gsub(/<script (.+?)>/) { '%script '+$1+"%"}.gsub(/<\/script>/, '%/script%')
       io.close_write
-      io.read.gsub(/%script\n/,"%script ").gsub(/%script (.+?)%/) {'<script '+$1+'>'}.gsub(/%\/script%/,'</script>')
+      io.read.gsub(/%script\n/, "%script ").gsub(/%script (.+?)%/) {'<script '+$1+'>'}.gsub(/%\/script%/, '</script>')
     }
 
     #<script src=['"]http:\/\/gist.github.com\/([0-9]+)\.js\?file=gistfile1.([a-zA-Z0-9]+)['"] ?\/>
@@ -253,15 +271,15 @@ module Blogger
       text = $3
       begin
         g = Gist.new($1)
-      rescue GistNotFound,GistFileOneNotFound
-        g = Gist.create(:text => text,:ext => $3,:description => "Blogger.vim #{Time.now}")
+      rescue GistNotFound, GistFileOneNotFound
+        g = Gist.create(:text => text, :ext => $3, :description => "Blogger.vim #{Time.now}")
         g.embed
       else
         if g.editable?
           g.text = text
           g.update($3).embed
         else
-          g = Gist.create(:text => text,:ext => $3,:description => "Blogger.vim #{Time.now}")
+          g = Gist.create(:text => text, :ext => $3, :description => "Blogger.vim #{Time.now}")
           g.embed
         end
       end
@@ -270,7 +288,7 @@ module Blogger
       text = $1
       if Blogger.gist
         if $1.split(/\r?\n/).size >= 5
-          g = Gist.create(:text => text,:description => "Blogger.vim #{Time.now}")
+          g = Gist.create(:text => text, :description => "Blogger.vim #{Time.now}")
           g.embed
         else; s
         end

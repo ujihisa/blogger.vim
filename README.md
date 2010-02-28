@@ -50,6 +50,28 @@ To post it, type
 
 If an error came, try `:w!` instead.
 
+### Put code to gist
+
+If you using git and github, you can put code to gist automatic.
+
+First, setup git. Access to [GitHub's account settings](https://github.com/account), and click **Global git config information**.
+
+Then, type `git config` lines to your shell.
+
+Last, add the following to your .vimrc:
+
+    let g:blogger_gist = 1
+
+Then write code like this:
+
+        a
+        a
+        a
+        a
+        a
+
+blogger.rb automatic put code to gist if over 5 lines.
+
 ### FAQ
 
 * Q. I put the youbute embed into my blog, but it doesn't appear.

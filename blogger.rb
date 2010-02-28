@@ -54,19 +54,18 @@ class Gist
   def initialize(gist_id=nil)
     raise ArgumentError, 'gist_id is not vaild id' if
       gist_id.to_i.zero? && !gist_id.nil?
-    if gist_id
-      @url     = "http://gist.github.com/#{gist_id.to_s}"
-      @text    = open("#{@url}.txt").read
-      begin
-        open("#{@url}.js").read
-      rescue OpenURI::HTTPError
-        raise Gist::GistNotFound
-      end
-      @ext = open(@url).read.
-        gsub(/.+http:\/\/gist\.github\.com\/#{gist_id.to_s}\.js\?file=gistfile1\.([a-zA-Z0-9]+).+/m) { $1 }
-      raise Gist::GistFileOneNotFound if @ext =~ /^<!DOCTYPE/
-      @gist_id = gist_id.to_s
+    return unless gist_id
+    @url     = "http://gist.github.com/#{gist_id.to_s}"
+    @text    = open("#{@url}.txt").read
+    begin
+      open("#{@url}.js").read
+    rescue OpenURI::HTTPError
+      raise Gist::GistNotFound
     end
+    @ext = open(@url).read.
+      gsub(/.+http:\/\/gist\.github\.com\/#{gist_id.to_s}\.js\?file=gistfile1\.([a-zA-Z0-9]+).+/m) { $1 }
+    raise Gist::GistFileOneNotFound if @ext =~ /^<!DOCTYPE/
+    @gist_id = gist_id.to_s
   end
 
   def ext

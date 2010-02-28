@@ -1,4 +1,4 @@
-require 'blogger.rb'
+require File.dirname(__FILE__) + '/../blogger.rb'
 
 class DateTime
   def inspect

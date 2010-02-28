@@ -95,21 +95,22 @@ class Gist
   end
 
   def update(new_ext=nil, new_text=nil, return_self=true)
-    !return_self ? Net::HTTP.post_form(
+    r = Net::HTTP.post_form(
       URI.parse("http://gist.github.com/gists/"+@gist_id),
       {
         "file_contents[gistfile1.#{@ext}]" => new_text.nil? ? @text : new_text,
         "file_ext[gistfile1.#{@ext}]" => (@ext != new_ext && !new_ext.nil?) ? ".#{new_ext}" : ".#{@ext}",
         "file_name[gistfile1.#{ext}]" => "",
         "_method" => "put"
-      }.merge(self.class.auth)) : self
+      }.merge(self.class.auth))
+    return_self ? self : r
   end
 
-  def self.auth
+  def self.auth(raise_error_if_empty=true)
     user  = `git config --global github.user`.strip
     token = `git config --global github.token`.strip
-    raise GitIsNotConfigured, 'Access to [GitHub\'s account settings](https://github.com/account), and click Global git config information. Then type `git config` lines to your shell.' if user.empty? || token.empty?
-    { :login => user, :token => token }
+    raise GitIsNotConfigured, 'Access to [GitHub\'s account settings](https://github.com/account), and click Global git config information. Then type `git config` lines to your shell.' if (user.empty? || token.empty?) && raise_error_if_empty
+    user.empty? ? {} : { :login => user, :token => token }
   end
 end
 
@@ -295,6 +296,7 @@ module Blogger
       else; s
       end
     end
+    text
   end
 end
 

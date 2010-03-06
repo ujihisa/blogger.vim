@@ -285,15 +285,14 @@ module Blogger
         end
       end
     end
-    text.gsub!(/<pre><code>(.+?)<\/code><\/pre>/m) do |s|
-      text = $1
-      if Blogger.gist
+    if Blogger.gist
+      text.gsub!(/<pre><code>(.+?)<\/code><\/pre>/m) do |s|
+        text2 = $1
         if $1.split(/\r?\n/).size >= 5
-          g = Gist.create(:text => text, :description => "Blogger.vim #{Time.now}")
+          g = Gist.create(:text => text2, :description => "Blogger.vim #{Time.now}")
           g.embed
         else; s
         end
-      else; s
       end
     end
     text

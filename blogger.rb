@@ -6,6 +6,7 @@ require 'nokogiri'
 require 'markdown'
 require 'net-https-wrapper'
 require 'open-uri'
+require 'cgi'
 
 class Array
   # maph :: [a] -> (a -> b) -> Hash
@@ -289,7 +290,7 @@ module Blogger
       text.gsub!(/<pre><code>(.+?)<\/code><\/pre>/m) do |s|
         text2 = $1
         if $1.split(/\r?\n/).size >= 5
-          g = Gist.create(:text => text2, :description => "Blogger.vim #{Time.now}")
+          g = Gist.create(:text => CGI.unescapeHTML(text2), :description => "Blogger.vim #{Time.now}")
           g.embed
         else; s
         end

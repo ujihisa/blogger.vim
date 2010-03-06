@@ -314,7 +314,7 @@ if __FILE__ == $0
   when 'create'
     uri = Blogger.create(ARGV[0], Blogger.login(ARGV[1], ARGV[2]), STDIN.read)
     if /darwin/ =~ RUBY_PLATFORM
-      system "echo '#{uri}' | pbcopy >&/dev/null" rescue nil
+      IO.popen('pbcopy', 'w') {|io| io.write uri } rescue nil
     end
     puts uri
   when 'update'

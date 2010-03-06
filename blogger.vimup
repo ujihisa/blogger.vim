@@ -7,6 +7,9 @@
 "detailed_description": "See http://github.com/ujihisa/blogger.vim/tree/master"
 "install_details":
 "versions":
+  - '2.0': |
+      * [Feature] Gist support. (Greatefully thanks to Sora Harakami!)
+      * `let g:blogger_gist = 1` allows you to post long code into gist automatically.
   - '1.7': |
       * [Feature] Filetype is `markdown` instead of `mkd`
       * [Bugfix] Title string is escaped

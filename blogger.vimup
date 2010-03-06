@@ -4,7 +4,7 @@
 "script_package": "{script_name}-{version}.zip"
 "required_vim_version": '7.0'
 "summary": The only one vim script which handles Blogger. Powered by Metarw.
-"detailed_description": "See http://github.com/ujihisa/blogger.vim/tree/master"
+"detailed_description": "See http://github.com/ujihisa/blogger.vim"
 "install_details":
 "versions":
   - '2.0': |

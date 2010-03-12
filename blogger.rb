@@ -127,10 +127,10 @@ module Blogger
   def self.list(blogid, page)
     __pagenate_get__(blogid, page).xpath('//xmlns:entry[xmlns:link/@rel="alternate"]').
       map {|i|
-      [:published, :updated, :title, :content].
-        maph {|s| [s, i.at(s.to_s).content] }.
-        update(:uri => i.at('link[@rel="alternate"]')['href'])
-    }
+        [:published, :updated, :title, :content].
+          maph {|s| [s, i.at(s.to_s).content] }.
+          update(:uri => i.at('link[@rel="alternate"]')['href'])
+      }
   end
 
   # show :: String -> String -> IO [String]

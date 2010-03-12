@@ -207,9 +207,9 @@ module Blogger
   def self.__pagenate_get__(blogid, page)
     xml = Net::HTTP.get(URI.parse(
       "http://www.blogger.com/feeds/#{blogid}/posts/default?max-results=30&start-index=#{30*page+1}"))
-      xml = Nokogiri::XML(xml)
-      raise EmptyEntry if xml.xpath('//xmlns:entry').empty?
-      xml
+    xml = Nokogiri::XML(xml)
+    raise EmptyEntry if xml.xpath('//xmlns:entry').empty?
+    xml
   end
 
   # __firstline2title__ :: String -> String

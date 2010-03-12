@@ -7,6 +7,8 @@
 "detailed_description": "See http://github.com/ujihisa/blogger.vim"
 "install_details":
 "versions":
+  - '2.1': |
+      * [Bugfix] Supports bloggers who use "summarize" feature
   - '2.0': |
       * [Feature] Gist support. (Greatefully thanks to Sora Harakami!)
       * `let g:blogger_gist = 1` allows you to post long code into gist automatically.

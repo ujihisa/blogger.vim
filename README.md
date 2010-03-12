@@ -15,6 +15,7 @@ Tatsuhiro UJIHISA <http://ujihisa.blogspot.com/>
 * ruby 1.9.1+
   * (gem) nokogiri 1.2.3+
   * (gem) rpeg-markdown 1.4.4+
+  * (gem) net-https-wrapper
 * pandoc 1.2+
 
 ## How to use

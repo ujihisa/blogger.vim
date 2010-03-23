@@ -233,9 +233,10 @@ module Blogger
     lines = text.lines.to_a
     title = __firstline2title__(lines.shift.strip)
     body = self.text2html(lines.join)
-    # body = body.gsub('&amp;', '&').gsub('&', '&amp;') # For inline HTML Syntax
+
     body.gsub!(/(\\?)&/){|s| $1.empty? ? '&amp;' : '&' }
     title.gsub!(/(\\?)&/){|s| $1.empty? ? '&amp;' : '&' }
+
     <<-EOF.gsub(/^\s*\|/, '')
     |<entry xmlns='http://www.w3.org/2005/Atom'>
     |  <title type='text'>#{title.gsub(/&/,'&amp;')}</title>

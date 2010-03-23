@@ -19,8 +19,8 @@ end
 
 describe Blogger do
   before(:each) do
-    @new_entry_str = "# hi\n\nIt's sunny today.\nyay!\n\n* item1\n* item2\n\n" <<
-    '<object width="425" height="344"><param name="movie"></param><embed src="http://www.youtube.com/v/UF8uR6Z6KLc&amp;hl=en&amp;fs=1" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="425" height="344"></embed></object>'
+    @new_entry_str = "# hi & \&\n\nIt's sunny today.\nyay!\n\n* item1\n* item2\n\n" <<
+    '<object width="425" height="344"><param name="movie"></param><embed src="http://www.youtube.com/v/UF8uR6Z6KLc&amp;hl=en&amp;fs=1" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="425" height="344"></embed></object>' << "\n\n& \&"
     @email = 'blogger.vim@gmail.com'
     @pass = 'bloggervimvim' # I hope you never change it...
     @blogid = '7772225564702673313'
@@ -112,8 +112,15 @@ describe Blogger do
     it 'translate the argument text to xml' do
       xml = Blogger.text2xml(@new_entry_str)
       doc = Nokogiri::XML(xml)
-      doc.xpath('//xmlns:entry/xmlns:title').first.content.should == 'hi'
+      doc.xpath('//xmlns:entry/xmlns:title').first.content.should match('hi')
       doc.xpath('//xmlns:entry/xmlns:content').first.content.should match(/It's sunny today/)
+    end
+
+    it "& is replace to &amp;, but \& isn't." do
+      xml = Blogger.text2xml(@new_entry_str)
+      doc = Nokogiri::XML(xml)
+      doc.xpath('//xmlns:entry/xmlns:title').first.content.should match('&amp; &')
+      doc.xpath('//xmlns:entry/xmlns:content').first.content.should match('&amp; &')
     end
   end
 

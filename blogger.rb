@@ -117,6 +117,7 @@ end
 
 module Blogger
   class RateLimitException < Exception; end
+  class UnknownError < Exception; end
   class EmptyEntry < Exception; end
 
   @@gist = false
@@ -172,7 +173,9 @@ module Blogger
         'Content-Type' => 'application/atom+xml'
       })
       raise RateLimitException if xml.body == "Blog has exceeded rate limit or otherwise requires word verification for new posts"
-      Nokogiri::XML(xml.body).at('//xmlns:link[@rel="alternate"]')['href']
+      x = Nokogiri::XML(xml.body)
+      raise UnknownError, xml.body unless /published/ =~ x.to_s
+      x.at('//xmlns:link[@rel="alternate"]')['href']
   end
 
   # update :: String -> String -> String -> String -> IO ()
@@ -231,9 +234,11 @@ module Blogger
     title = __firstline2title__(lines.shift.strip)
     body = self.text2html(lines.join)
     # body = body.gsub('&amp;', '&').gsub('&', '&amp;') # For inline HTML Syntax
+    body.gsub!(/(\\?)&/){|s| $1.empty? ? '&amp;' : '&' }
+    title.gsub!(/(\\?)&/){|s| $1.empty? ? '&amp;' : '&' }
     <<-EOF.gsub(/^\s*\|/, '')
     |<entry xmlns='http://www.w3.org/2005/Atom'>
-    |  <title type='text'>#{title}</title>
+    |  <title type='text'>#{title.gsub(/&/,'&amp;')}</title>
     |  <content type='xhtml'>
     |    <div xmlns="http://www.w3.org/1999/xhtml">
     |      #{body}

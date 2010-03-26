@@ -116,7 +116,7 @@ describe Blogger do
       doc.xpath('//xmlns:entry/xmlns:content').first.content.should match(/It's sunny today/)
     end
 
-    it "& is replace to &amp;, but \& isn't." do
+    it "& is replaced to &amp;, but \& isn't." do
       xml = Blogger.text2xml(@new_entry_str)
       doc = Nokogiri::XML(xml)
       doc.xpath('//xmlns:entry/xmlns:title').first.content.should match('&amp; &')

@@ -19,7 +19,8 @@ class Gist
   class GistFileOneNotFound < Exception;end
   class GistNotFound < Exception; end
   class GitIsNotConfigured < Exception; end
-  def self.create(o={})
+
+  def self.create(o = {})
     opt = {:text => '', :description => nil, :ext => 'txt'}.merge(o)
     a = self.new
     a.instance_variable_set("@text", opt[:text])
@@ -234,12 +235,12 @@ module Blogger
     title = __firstline2title__(lines.shift.strip)
     body = self.text2html(lines.join)
 
-    body.gsub!(/(\\?)&/){|s| $1.empty? ? '&amp;' : '&' }
-    title.gsub!(/(\\?)&/){|s| $1.empty? ? '&amp;' : '&' }
+    body.gsub!(/(\\?)&/) {|s| $1.empty? ? '&amp;' : '&' }
+    title.gsub!(/(\\?)&/) {|s| $1.empty? ? '&amp;' : '&' }
 
     <<-EOF.gsub(/^\s*\|/, '')
     |<entry xmlns='http://www.w3.org/2005/Atom'>
-    |  <title type='text'>#{title.gsub(/&/,'&amp;')}</title>
+    |  <title type='text'>#{title.gsub(/&/, '&amp;')}</title>
     |  <content type='xhtml'>
     |    <div xmlns="http://www.w3.org/1999/xhtml">
     |      #{body}
@@ -265,7 +266,7 @@ module Blogger
         if g.updatable?
           c  = '<gist options="'+$1+' '+$2+'" />'
           c << "\n"
-          c << g.text.split(/\r?\n/).map{|x| '    '+x }.join("\n")
+          c << g.text.split(/\r?\n/).map {|x| '    ' + x }.join("\n")
           c << "\n"
         else; s
         end

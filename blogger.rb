@@ -236,6 +236,9 @@ module Blogger
     title = __firstline2title__(lines.shift.strip)
     body = self.text2html(lines.join)
 
+    body.gsub!('&quot;', '"')
+    title.gsub!('&quot;', '"')
+
     body.gsub!(/(\\?)&/) {|s| $1.empty? ? '&amp;' : '&' }
     title.gsub!(/(\\?)&/) {|s| $1.empty? ? '&amp;' : '&' }
 

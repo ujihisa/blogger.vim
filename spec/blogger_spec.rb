@@ -19,7 +19,7 @@ end
 
 describe Blogger do
   before(:each) do
-    @new_entry_str = "# hi & \&\n\nIt's sunny today.\nyay!\n\n* item1\n* item2\n\n" <<
+    @new_entry_str = "# hi & \&\n\nIt's sunny today.\nyay!\n\n* item1\n* item2\nthis \"is\" a pen\n" <<
     '<object width="425" height="344"><param name="movie"></param><embed src="http://www.youtube.com/v/UF8uR6Z6KLc&amp;hl=en&amp;fs=1" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="425" height="344"></embed></object>' << "\n\n& \&"
     @email = 'blogger.vim@gmail.com'
     @pass = 'bloggervimvim' # I hope you never change it...
@@ -114,6 +114,7 @@ describe Blogger do
       doc = Nokogiri::XML(xml)
       doc.xpath('//xmlns:entry/xmlns:title').first.content.should match('hi')
       doc.xpath('//xmlns:entry/xmlns:content').first.content.should match(/It's sunny today/)
+      doc.xpath('//xmlns:entry/xmlns:content').first.content.should match(/this "is" a pen/)
     end
 
     it "& is replaced to &amp;, but \& isn't." do

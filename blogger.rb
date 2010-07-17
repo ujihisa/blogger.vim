@@ -195,7 +195,8 @@ module Blogger
     xml.at("//xmlns:entry[xmlns:link/@href='#{uri}']")['xmlns'] = 'http://www.w3.org/2005/Atom'
     Nokogiri::XML(Net::HTTP.put(
       put_uri,
-      xml.at("//xmlns:entry[xmlns:link/@href='#{uri}']").to_s,
+      # The line below is very hacky and intentional. It removes xmlns/thr
+      Nokogiri::XML(xml.at("//xmlns:entry[xmlns:link/@href='#{uri}']").to_s).to_s,
       {
         "Authorization" => "GoogleLogin auth=#{token}",
         'Content-Type' => 'application/atom+xml'

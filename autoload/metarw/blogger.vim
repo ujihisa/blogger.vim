@@ -25,7 +25,10 @@
 " FIXME: metarw#blogger#complete NOT IMPLEMENTED!
 "   The following metarw#blogger#complete() is just the copy from metarw-git
 " script variables {{{2
-let s:blogger_rb_command = printf('ruby %s/blogger.rb', expand('<sfile>:p:h'))
+if !exists('g:blogger_ruby_path')
+  let g:blogger_ruby_path = '/usr/bin/ruby'
+endif
+let s:blogger_rb_command = printf('%s %s/blogger.rb', g:blogger_ruby_path, expand('<sfile>:p:h'))
 if !exists('g:blogger_gist')
   let g:blogger_gist = 0
 endif

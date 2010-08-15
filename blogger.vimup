@@ -9,6 +9,7 @@
 "versions":
   - '2.3': |
       * [Bugfix] Supports rpeg-markdown without rubygems
+      * [Feature] g:blogger_ruby_path for ~/.vimrc
   - '2.2': |
       * [Bugfix] Follows changes in nokogiri or blogger; you can edit posts again.
   - '2.1': |

@@ -38,6 +38,12 @@ And then add the following to your .vimrc:
 
 sample blogid: 2961087480852727381
 
+You also can specify Ruby command.
+
+  let g:blogger_ruby_path = '/Users/ujihisa/git/ruby192/local/bin/ruby'
+
+The default is `/usr/bin/ruby` that few people are using.
+
 ### Get the list of entries from your blog
 
     :e blogger:list

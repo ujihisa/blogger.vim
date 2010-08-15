@@ -1,4 +1,10 @@
-require File.dirname(__FILE__) + '/../blogger.rb'
+unless defined? require_relative
+  def require_relative(x)
+    require File.expand_path(File.dirname(__FILE__)) + '/' + x
+  end
+end
+require 'date'
+require_relative '../autoload/metarw/blogger.rb'
 
 class DateTime
   def inspect

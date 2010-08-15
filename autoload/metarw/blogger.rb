@@ -3,7 +3,13 @@ require 'net/https'
 require 'uri'
 require 'rubygems'
 require 'nokogiri'
-require 'markdown'
+begin
+  require 'markdown'
+rescue LoadError
+  $: << ENV['HOME'] + '/git/rpeg-markdown/ext'
+  $: << ENV['HOME'] + '/git/rpeg-markdown/lib'
+  require 'markdown'
+end
 require 'net-https-wrapper'
 require 'open-uri'
 require 'cgi'

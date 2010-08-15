@@ -25,8 +25,8 @@ Before you use blogger.vim, you have to change the setting of blogger [like it](
 ### Install
 After the install of metarw, do them:
 
-    $ cp blogger.vim ~/.vim/autoload/metarw/
-    $ cp blogger.rb ~/.vim/autoload/metarw/
+    $ cp autoload/metarw/blogger.vim ~/.vim/autoload/metarw/
+    $ cp autoload/metarw/blogger.rb ~/.vim/autoload/metarw/
 
 And then add the following to your .vimrc:
 

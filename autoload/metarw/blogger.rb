@@ -1,15 +1,9 @@
 #!/usr/bin/env ruby
 require 'net/https'
 require 'uri'
+require 'open3'
 require 'rubygems'
 require 'nokogiri'
-begin
-  require 'markdown'
-rescue LoadError
-  $: << ENV['HOME'] + '/git/rpeg-markdown/ext'
-  $: << ENV['HOME'] + '/git/rpeg-markdown/lib'
-  require 'markdown'
-end
 require 'net-https-wrapper'
 require 'open-uri'
 require 'cgi'
@@ -287,7 +281,7 @@ module Blogger
   end
 
   def self.text2html(mkd)
-    text = Markdown.new(mkd).to_html
+    text = Open3.capture2e("pandoc --from=markdown --to=html", :stdin_data => mkd)[0]
     # update gist if editable.
     text.gsub!(/<p><gist option="([0-9]+) ([a-zA-Z0-9]+)" ?\/><\/p>\n*<pre><code>(.+)<\/code><\/pre>/m) do
       text = $3

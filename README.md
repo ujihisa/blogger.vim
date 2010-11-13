@@ -12,9 +12,8 @@ Tatsuhiro UJIHISA <http://ujihisa.blogspot.com/>
 
 * vim 7.2+
   * [metarw 0.0.3+](http://www.vim.org/scripts/script.php?script_id=2335)
-* ruby 1.8.7+
+* ruby 1.9.2+
   * (gem) nokogiri 1.4.2+
-  * (gem) rpeg-markdown 1.4.4+
   * (gem) net-https-wrapper
 * pandoc 1.2+
 

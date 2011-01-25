@@ -176,7 +176,8 @@ module Blogger
       raise RateLimitException if xml.body == "Blog has exceeded rate limit or otherwise requires word verification for new posts"
       x = Nokogiri::XML(xml.body)
       raise UnknownError, xml.body unless /published/ =~ x.to_s
-      x.at('//xmlns:link[@rel="alternate"]')['href']
+      elem = x.at('//xmlns:link[@rel="alternate"]')
+      uri = elem != nil ? elem['href'] : "DRAFT"
   end
 
   # update :: String -> String -> String -> String -> IO ()
@@ -242,16 +243,19 @@ module Blogger
     body.gsub!(/(\\?)&/) {|s| $1.empty? ? '&amp;' : '&' }
     title.gsub!(/(\\?)&/) {|s| $1.empty? ? '&amp;' : '&' }
 
-    <<-EOF.gsub(/^\s*\|/, '')
-    |<entry xmlns='http://www.w3.org/2005/Atom'>
+    xml = <<-EOF.gsub(/^\s*\|/, '')
+    |<entry xmlns='http://www.w3.org/2005/Atom' xmlns:app='http://purl.org/atom/app#'>
     |  <title type='text'>#{title.gsub(/&/, '&amp;')}</title>
     |  <content type='xhtml'>
     |    <div xmlns="http://www.w3.org/1999/xhtml">
     |      #{body}
     |    </div>
     |  </content>
-    |</entry>
     EOF
+    if title =~ /^DRAFT/
+      xml += "<app:control><app:draft>yes</app:draft></app:control>"
+    end
+    xml += "</entry>"
   end
 
   # html2text :: String -> String

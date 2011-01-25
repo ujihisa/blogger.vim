@@ -48,6 +48,15 @@ describe Blogger do
     end
   end
 
+  describe '.create draft entry' do
+    it 'creates a draft entry by the argument string' do
+      # Adding 'DRAFT' with title prefix means draft entry
+      @new_entry_str.gsub!(/^#/, 'DRAFT')
+      token = Blogger.login(@email, @pass)
+      uri = Blogger.create(@blogid, token, @new_entry_str)
+      uri.should == 'DRAFT'
+    end
+  end
 
   describe '.list' do
     it 'retrieves blog entry hashes' do
@@ -162,7 +171,7 @@ describe Blogger do
       |
       |    this is
       |    a pen
-      |    
+      |
       |    hehehe
       |
       |Gist!
@@ -197,7 +206,7 @@ describe Blogger do
       |
       |    this is
       |    a pen
-      |    
+      |
       |    hehehe
       |
       |Gist!
@@ -215,4 +224,5 @@ describe Blogger do
 
   describe '.text2html' do
   end
+
 end

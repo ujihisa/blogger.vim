@@ -171,7 +171,7 @@ describe Blogger do
       |
       |    this is
       |    a pen
-      |
+      |    
       |    hehehe
       |
       |Gist!
@@ -206,7 +206,7 @@ describe Blogger do
       |
       |    this is
       |    a pen
-      |
+      |    
       |    hehehe
       |
       |Gist!
@@ -224,5 +224,4 @@ describe Blogger do
 
   describe '.text2html' do
   end
-
 end

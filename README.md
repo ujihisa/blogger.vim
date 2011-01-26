@@ -56,6 +56,10 @@ To post it, type
 
 If an error came, try `:w!` instead.
 
+### Create a draft and save it on your blogger
+
+Add "DRAFT" in the very beginning of the title, the first line of the buffer.
+
 ### Put code to gist
 
 If you use git and github, you can put code to gist automatically.

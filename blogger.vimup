@@ -7,6 +7,8 @@
 "detailed_description": "See http://github.com/ujihisa/blogger.vim"
 "install_details":
 "versions":
+  - '2.5': |
+      * [Feature] Supports draft on blogger. (thanks to @mahm!)
   - '2.4': |
       * Removing peg-markdown Rubygems library dependency
   - '2.3': |

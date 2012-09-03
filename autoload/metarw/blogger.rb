@@ -197,7 +197,7 @@ module Blogger
     Nokogiri::XML(Net::HTTP.put(
       put_uri,
       # The line below is very hacky and intentional. It removes xmlns/thr
-      Nokogiri::XML(xml.at("//xmlns:entry[xmlns:link/@href='#{uri}']").to_s).to_s,
+      Nokogiri::XML(xml.at("//xmlns:entry[xmlns:link/@href='#{uri}']").to_s.gsub(/<gd:image.*\/>/, '').gsub(/<thr:total>.*<\/thr:total>/, '')).to_s,
       {
         "Authorization" => "GoogleLogin auth=#{token}",
         'Content-Type' => 'application/atom+xml'

@@ -1,8 +1,10 @@
 # Blogger.vim
 
-The only one vim script which handles [Blogger](http://www.blogger.com/) using metarw. We also offer the ruby script blogger.rb which handles Blogger.
+The only one vim script which handles [Blogger](http://www.blogger.com/) using
+metarw. We also offer the ruby script blogger.rb which handles Blogger.
 
-Blogger is a blog service that offers \*.blogspot.com. Therefore you would feel free to call this script blogspot.vim.
+Blogger is a blog service that offers \*.blogspot.com. Therefore you would feel
+free to call this script blogspot.vim.
 
 ## Author
 
@@ -12,7 +14,7 @@ Tatsuhiro UJIHISA <http://ujihisa.blogspot.com/>
 
 * vim 7.2+
   * [metarw 0.0.3+](http://www.vim.org/scripts/script.php?script_id=2335)
-* ruby 1.9.2+
+* ruby 1.9.2+ (recommended: 2.1.0dev)
   * (gem) nokogiri 1.4.2+
   * (gem) net-https-wrapper
 * pandoc 1.2+
@@ -22,6 +24,7 @@ Tatsuhiro UJIHISA <http://ujihisa.blogspot.com/>
 Before you use blogger.vim, you have to change the setting of blogger [like it](http://gyazo.com/7c8b02a1a3e41fb665347323bf4fab84.png).
 
 ### Install
+
 After the install of metarw, do them:
 
     $ cp autoload/metarw/blogger.vim ~/.vim/autoload/metarw/
@@ -39,7 +42,7 @@ sample blogid: 2961087480852727381
 
 You also can specify Ruby command.
 
-  let g:blogger_ruby_path = '/Users/ujihisa/git/ruby192/local/bin/ruby'
+    let g:blogger_ruby_path = expand('~/git/ruby/local/bin/ruby')
 
 The default is `/usr/bin/ruby` that few people are using.
 
@@ -49,8 +52,8 @@ The default is `/usr/bin/ruby` that few people are using.
 
 ### Create a new entry to your blog
 
-Write an entry on a buffer. Write the title on the first line, and the content on the rest of lines.
-To post it, type
+Write an entry on a buffer. Write the title on the first line, and the content
+on the rest of lines.  To post it, type
 
     :w blogger:create
 
@@ -82,13 +85,15 @@ Now you finished all preparations. Then write code like this:
         a
         a
 
-`blogger.rb` automatically puts codes in your blog post to gist if the codes are more than 5 lines.
+`blogger.rb` automatically puts codes in your blog post to gist if the codes
+are more than 5 lines.
 
 ### FAQ
 
 * Q. I put the youbute embed into my blog, but it doesn't appear.
 
-        A. That's because of '&' in the html. You must replace '&' to '&amp;' by hand.
+        A. That's because of '&' in the html. You must replace '&' to '&amp;'
+        by hand.
 
 ### blogger.rb
 
@@ -106,11 +111,11 @@ The corresponding usage:
     $ ruby blogger.rb create {blogid} {email} {password} < aaa.txt
     $ ruby blogger.rb update {blogid} {uri} {email} {password} < aaa.txt
 
-## Licence
+## License
 
 MIT license
 
-Copyright (C) 2009 Tatsuhiro UJIHISA <http://ujihisa.blogspot.com/>
+Copyright (C) 2009-2013 Tatsuhiro UJIHISA <http://ujihisa.blogspot.com/>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

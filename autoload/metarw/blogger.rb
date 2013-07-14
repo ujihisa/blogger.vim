@@ -132,9 +132,8 @@ module Blogger
         tmp = [:published, :updated, :title].
           maph {|s| [s, i.at(s.to_s).content] }.
           update(
-            :content =>
-            i.at('content') ? i.at('content').content : i.at('summary').content).
-          update(:uri => i.at('link[@rel="alternate"]')['href'])
+            content: i.at('content') ? i.at('content').content : i.at('summary').content).
+          update(uri: i.at('link[@rel="alternate"]')['href'])
       }
   end
 
